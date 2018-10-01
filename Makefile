@@ -1,25 +1,31 @@
 #Mark Gomes
 #Makefile for programming assignment 2
-#This Makefile allows you to make an OpenGL application
-#   whose source is exactly one .c or .cc file.
-#
+#This Makefile compiles all the files in this project
 # To use this Makefile, you type:
 #
-#        make xxxx
-#                  
-# where
-#       xxxx.c is the name of the file you wish to compile 
+#        make anitran
+#                   
 #       
-# A binary named xxxx will be produced
+# A binary named anitran will be produced
 
 CC = gcc
 C++ = g++ 
 LIBDIRS = -L/usr/lib64
 INCDIRS = -I/usr/include
 LDLIBS =  -lglut -lGL -lGLU -lX11 -lm
+OBJS = Graphics.o
+HDRS = Graphics.h
 
-.c:
-	$(CC)  $@.c $(INCDIRS) $(LIBDIRS) $(LDLIBS) -o $@
+all : anitran
 
-.cpp:
-	$(C++)  -O $@.cpp -g $(INCDIRS) $(LIBDIRS) $(LDLIBS) -o $@
+anitran : main.o $(OBJS)    
+	$(CC)  $(CCFLAGS) main.o $(OBJS) $(INCDIRS) $(LIBDIRS) $(LDLIBS) -o anitran 
+
+main.o : main.cc  $(HDRS)     
+	$(CC) $(CCFLAGS) main.cc  -c 
+
+Graphics.o : Graphics.cc  Graphics.h $(HDRS)  
+	$(CC) $(CCFLAGS)  Graphics.cc  -c 
+
+clean :
+	rm *.o
