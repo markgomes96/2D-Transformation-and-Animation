@@ -7,40 +7,15 @@ using namespace std;
 class Graphics 
 {
      public:
-	
-	Graphics();
-	
-	/*
-	void setWindowPosition(int _windowPosX, int _windowPosY);
-	void setWindowSize(int _windowMinX, int _windowMaxY);
-	void setViewportDim(int _viewportMinX, int _viewportMaxX, int _viewportMinY, int _viewportMaxY);
-      	*/
+	//Graphics();
 
-	void myglutInit( int argc, char** argv );
-	void myInit(void);
-	//void display(void);
+	static void myglutInit( int argc, char** argv );
+	static void myInit(void);
 	
-	void drawPoint( int x, int y );
-	void drawOutline( void );
-	void drawPolygon( void );
+	static void drawPoint( int x, int y );
+	static void drawOutline( void );
+	static void drawPolygon( vector<vertex> vl, color c );
 	
-    private:
-	/*
-	//Variables to specify window position and size
-	int windowPosX;
-	int windowPosY;
-	int windowMaxX;
-	int windowMaxY;
-
-	//Variables to specify veiwport dimensions
-	int viewportMinX;
-	int viewportMaxX;
-	int viewportMinY;
-	int viewportMaxY;
-
-	int red;
-	int green;
-	int blue;
-	*/
+     private:
 };
 

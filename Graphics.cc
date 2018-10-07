@@ -6,51 +6,12 @@
 #include "Graphics.h"
 
 using namespace std;
-
+/*
 Graphics :: Graphics()		//default constructor
 {
-	/*
-	windowPosX = 100;
-	windowPosY = 100;
-	
-	windowMaxX = 800;
-	windowMaxY = 800;
 
-	viewportMinX = 0.0;
-	viewportMaxX = 800.0;
-	viewportMinY = 0.0;
-	viewportMaxY = 800.0;
-
-	red = 255;	//set default color to red
-	green = 0;
-	blue = 0;
-	*/
-	
-	//glutDisplayFunc(display); 		// display callback invoked when window opened
-}
-
-/*
-void Graphics :: setWindowPosition(int _windowPosX, int _windowPosY)
-{
-	windowPosX = _windowPosX;
-	windowPosY = _windowPosY;
-}
-
-void Graphics :: setWindowSize(int _windowMaxX, int _windowMaxY)
-{
-	windowMaxX = _windowMaxX;
-	windowMaxY = _windowMaxY;
-}
-
-void Graphics :: setViewportDim(int _viewportMinX, int _viewportMaxX, int _viewportMinY, int _viewportMaxY)
-{
-	viewportMinX = _viewportMinX;
-	viewportMaxX = _viewportMaxX;
-	viewportMinY = _viewportMinY;
-	viewportMaxY = _viewportMaxY;
 }
 */
-
 void Graphics :: myglutInit( int argc, char** argv )
 {
 	glutInit(&argc,argv);
@@ -60,11 +21,10 @@ void Graphics :: myglutInit( int argc, char** argv )
 	glutCreateWindow("Polygon Animation");	                        //window title
 }
 
-
 void Graphics :: myInit(void)
 {
 	//standard OpenGL attributes
-	glClearColor(1.0, 1.0, 1.0, 1.0);           //white background
+	glClearColor(0.0, 0.0, 0.0, 1.0);           //black background
 	glColor3f(1.0, 0.0, 0.0);                   // draw in red
 	glPointSize(10.0);
 	glLineWidth(3.0);
@@ -127,31 +87,17 @@ void Graphics :: drawOutline( void )		//Draw outline of polygon with line loops
 	*/
 }
 
-void Graphics :: drawPolygon( void )		//Draw filled polygon without tesselation
+void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon from list of points
 {
-	/*
-	glClear ( GL_COLOR_BUFFER_BIT );
-	glColor3f (1.0, 0.0, 1.0);			//change color to purple
+	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_POLYGON );
-		point *current = startPoint -> next;
-		while (current -> next != NULL)
-		{
-			glVertex2i ( current ->  x, current -> y );
-			current = current -> next;
-		}
-		glVertex2i ( current -> x, current -> y);
+		vector<vertex>::iterator it;
+        for(it = vl.begin(); it != vl.end(); it++)
+        {
+            glVertex2i ( it -> x , it -> y );
+        }
 	glEnd();
 	
-	for(int i = 0; i < ti; i++)
-	{
-		glBegin ( GL_POLYGON );
-			glVertex2i ( triangleList[i].v1.x, triangleList[i].v1.y );
-			glVertex2i ( triangleList[i].v2.x, triangleList[i].v2.y );	
-        		glVertex2i ( triangleList[i].v3.x, triangleList[i].v3.y );		
-		glEnd();
-	}
-	
 	glFlush();
-	*/
 }
