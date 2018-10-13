@@ -40,51 +40,29 @@ void Graphics :: myInit(void)
 
 void Graphics :: drawPoint( int x, int y )		//Draw point onto the screen
 {
-	/*
-	typedef GLfloat point[2];     
-	point p;
- 
-	glColor3ub( red, green, blue );
-   
-	p[0] = x;
-	p[1] = y;  
+	glColor3ub( 255, 0, 0 );
     
 	glBegin(GL_POINTS);
-		glVertex2fv(p); 
+		glVertex2i( x, y ); 
 	glEnd();
+ 
 	glFlush();
-	*/
 }
 
 
-void Graphics :: drawOutline( void )		//Draw outline of polygon with line loops
+void Graphics :: drawOutline(vector<vertex> vl, color c)		//Draw outline of polygon with line loops
 {
-	/*
-	glClear ( GL_COLOR_BUFFER_BIT );
-	glColor3f (1.0, 0.0, 0.0);			//change color to red
-
+	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
+	
 	glBegin ( GL_LINE_LOOP );
-		point *current = startPoint -> next;
-		while (current -> next != NULL)
-	    	{
-			glVertex2i ( current -> x, current -> y );
-			current = current -> next;
-	    	}
-		glVertex2i ( current -> x, current -> y);
+  vector<vertex>::iterator it;
+  for(it = vl.begin(); it != vl.end(); it++)
+  {
+    glVertex2i ( it -> x , it -> y );
+  }
 	glEnd();
-
-	for(int i = 0; i < ti; i++)
-	{
-		//display triangle outline on screen
-		glBegin ( GL_LINE_LOOP );
-			glVertex2i ( triangleList[i].v1.x, triangleList[i].v1.y );
-			glVertex2i ( triangleList[i].v2.x, triangleList[i].v2.y );
-			glVertex2i ( triangleList[i].v3.x, triangleList[i].v3.y );
-		glEnd();
-	}
-
+	
 	glFlush();
-	*/
 }
 
 void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon from list of points
@@ -92,11 +70,11 @@ void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon 
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_POLYGON );
-		vector<vertex>::iterator it;
-        for(it = vl.begin(); it != vl.end(); it++)
-        {
-            glVertex2i ( it -> x , it -> y );
-        }
+  vector<vertex>::iterator it;
+  for(it = vl.begin(); it != vl.end(); it++)
+  {
+    glVertex2i ( it -> x , it -> y );
+  }
 	glEnd();
 	
 	glFlush();

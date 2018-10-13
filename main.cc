@@ -15,12 +15,6 @@ int test = 5;
 
 int main(int argc, char** argv)
 {
-	/*
-	graphics.setWindowPosition(WINDOW_POS_X, WINDOW_POS_Y);
-	graphics.setWindowSize(WINDOW_MAX_X, WINDOW_MAX_Y);
-	graphics.setViewportDim(VIEWPORT_MIN_X, VIEWPORT_MAX_X, VIEWPORT_MIN_Y, VIEWPORT_MAX_Y);
-	*/
-
 	Graphics::myglutInit(argc,argv);     //set up the graphics
   Graphics::myInit();
     

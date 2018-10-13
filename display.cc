@@ -11,17 +11,9 @@ void display( void )
 	glClear(GL_COLOR_BUFFER_BIT);		//clear the window
 
 	glColor3f(1.0, 1.0, 1.0);
-  glRecti(VIEWPORT_MIN_X, VIEWPORT_MIN_Y, VIEWPORT_MAX_X, VIEWPORT_MAX_Y);
+  glRecti(VIEWPORT_MIN_X, VIEWPORT_MIN_Y, VIEWPORT_MAX_X, VIEWPORT_MAX_Y);    //set viewport
     
-  /*
-	glBegin(GL_POINTS);
-		glVertex2i(400, 400); 
-	glEnd();
-  */
-
-  //drawPolygon(vl, color(1.0, 0.0, 0.0));
-  //cout << shapelist[0].x << endl;
-  Graphics::drawPolygon(shapelist, color(1.0, 0.0, 0.0));
+  Graphics::drawOutline(shapelist, color(1.0, 0.0, 0.0));    //draw outline of shape
 
 	glFlush(); 					//forces buffer to be drawn
 }
