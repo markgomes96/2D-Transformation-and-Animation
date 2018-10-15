@@ -16,9 +16,9 @@ int test = 5;
 int main(int argc, char** argv)
 {
 	Graphics::myglutInit(argc,argv);     //set up the graphics
-  Graphics::myInit();
+	Graphics::myInit();
     
-  Shape::defineBasePoints();        //set up the initial shape of tree
+	Shape::defineBasePoints();        //set up the initial shape of tree
 	
 	glutMouseFunc(mouse);               //checks for user input
 	glutKeyboardFunc(keyboard);	 	

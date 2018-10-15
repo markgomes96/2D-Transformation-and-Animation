@@ -1,17 +1,10 @@
 #include "includes.h"
-#include "constants.h"
 #include "structs.h"
-#include "prototypes.h"
 
 #include "Graphics.h"
 
 using namespace std;
-/*
-Graphics :: Graphics()		//default constructor
-{
 
-}
-*/
 void Graphics :: myglutInit( int argc, char** argv )
 {
 	glutInit(&argc,argv);
@@ -34,8 +27,6 @@ void Graphics :: myInit(void)
 	glLoadIdentity();
 	gluOrtho2D(0.0, WINDOW_MAX_X, 0.0, WINDOW_MAX_Y);
 	glMatrixMode(GL_MODELVIEW);
-	
-	//glutDisplayFunc(display);
 }
 
 void Graphics :: drawPoint( int x, int y )		//Draw point onto the screen
@@ -45,8 +36,6 @@ void Graphics :: drawPoint( int x, int y )		//Draw point onto the screen
 	glBegin(GL_POINTS);
 		glVertex2i( x, y ); 
 	glEnd();
- 
-	glFlush();
 }
 
 
@@ -55,14 +44,12 @@ void Graphics :: drawOutline(vector<vertex> vl, color c)		//Draw outline of poly
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_LINE_LOOP );
-  vector<vertex>::iterator it;
-  for(it = vl.begin(); it != vl.end(); it++)
-  {
-    glVertex2i ( it -> x , it -> y );
-  }
+		vector<vertex>::iterator it;
+		for(it = vl.begin(); it != vl.end(); it++)
+		{
+			glVertex2i ( it -> x , it -> y );
+		}
 	glEnd();
-	
-	glFlush();
 }
 
 void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon from list of points
@@ -70,12 +57,26 @@ void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon 
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_POLYGON );
-  vector<vertex>::iterator it;
-  for(it = vl.begin(); it != vl.end(); it++)
-  {
-    glVertex2i ( it -> x , it -> y );
-  }
+  	vector<vertex>::iterator it;
+  		for(it = vl.begin(); it != vl.end(); it++)
+		{
+			glVertex2i ( it -> x , it -> y );
+		}
 	glEnd();
+}
+
+
+void Graphics :: drawTessPolygon(vector<triangle> tl, color c)
+{
+	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
-	glFlush();
+	vector<triangle>::iterator it;
+	for(it = trianglelist.begin(); it != trianglelist.end(); ++it)
+	{
+		glBegin ( GL_POLYGON );
+			glVertex2i ( it -> v1 -> x, it -> v1 -> y );
+			glVertex2i ( it -> v2 -> x, it -> v2 -> y );	
+        		glVertex2i ( it -> v3 -> x, it -> v3 -> y );		
+		glEnd();
+	}
 }

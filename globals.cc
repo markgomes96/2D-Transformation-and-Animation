@@ -2,6 +2,7 @@
 #define INC_GLOBALS_CC
 using namespace std;
 
-vector<vertex> shapelist;
+vector<vertex> vertexlist;
+vector<triangle> trianglelist;
 
 #endif
