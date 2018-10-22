@@ -16,7 +16,7 @@ void display( void )
 	//Graphics::drawOutline(vertexlist, color(1.0, 0.0, 0.0));    //draw outline of shape
 
 	tessellate();
-	Graphics::drawTessPolygon(trianglelist);
+	Graphics::drawTessPolygon(trianglelist, color(1.0, 0.0, 0.0));
 
 	glFlush(); 					//forces buffer to be drawn
 }

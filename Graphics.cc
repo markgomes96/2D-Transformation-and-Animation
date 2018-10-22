@@ -1,5 +1,7 @@
 #include "includes.h"
 #include "structs.h"
+#include "globals.h"
+#include "constants.h"
 
 #include "Graphics.h"
 
@@ -65,7 +67,6 @@ void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon 
 	glEnd();
 }
 
-
 void Graphics :: drawTessPolygon(vector<triangle> tl, color c)
 {
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
@@ -74,9 +75,15 @@ void Graphics :: drawTessPolygon(vector<triangle> tl, color c)
 	for(it = trianglelist.begin(); it != trianglelist.end(); ++it)
 	{
 		glBegin ( GL_POLYGON );
-			glVertex2i ( it -> v1 -> x, it -> v1 -> y );
-			glVertex2i ( it -> v2 -> x, it -> v2 -> y );	
-        		glVertex2i ( it -> v3 -> x, it -> v3 -> y );		
+			glVertex2f ( it -> v1.x, it -> v1.y );
+			glVertex2f ( it -> v2.x, it -> v2.y );	
+        		glVertex2f ( it -> v3.x, it -> v3.y );	
+			/*
+			cout << "( " << it -> v1.x << " , " << it -> v1.y  << " )" << "	";
+			cout << "( " << it -> v2.x << " , " << it -> v1.y  << " )" << "	";
+			cout << "( " << it -> v3.x << " , " << it -> v1.y  << " )" << "	";
+			cout << endl;
+			*/
 		glEnd();
 	}
 }

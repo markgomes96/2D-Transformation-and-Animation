@@ -20,40 +20,38 @@ void tessellate(void)
 		intTempList[index] = *it;
 		index++;
 	}
-	intTempList[index] = vertexList.front();
+	intTempList[index] = vertexlist.front();
 
-	//*Earclipping algorithm*
+	/*
+	for(int i = 0; i < vertCount; i++)
+	{
+		cout << i << ":  ( " << tempList[i].x << " , " << tempList[i].y  << " )" << endl;
+	}
+	*/
+
+	//Earclipping algorithm
 	vertex fp, mp, ep;				//first point, midpoint, endpoint
-	vector v1, v2, cp;				//vectors to calculate the crossproduct
+	vector3D v1, v2, cp;				//vectors to calculate the crossproduct
 	bool intersectFlag = false;
-	int direction = 0;			//get direction of first 3 points
 	while(vertCount > 3)
 	{
 		//Get next 3 points based on point index
 		fp = tempList[pi];
 		mp = tempList[pi+1];
-		ep = temptList[pi+2];
+		ep = tempList[pi+2];
 
         	//check the cross product to see if points go counter clockwise
-        	v1 = vector((mp.x - fp.x), (mp.y - fp.y), 0);
-        	v2 = vector((mp.x - ep.x), (mp.y - ep.y), 0);
+        	v1 = vector3D((mp.x - fp.x), (mp.y - fp.y), 0);
+        	v2 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);
        		cp = crossProduct(v1, v2);
-		
-		/*
- 		*Check start direction first, store as 1 or -1
- 		*/
-		if(direction == 0)
-		{
-			direction = sign(cp.z);
-		}
 
 		//check if current 3 points are going in initial polygon direction
-        	if(sign(cp.z) == direction)
+        	if(cp.z > 0)
         	{
 			//flag to check if line cuases an intersections
 			intersectFlag = false;
 			
-			for(int i = 0; i < verticesCount; i++)
+			for(int i = 0; i < vertCount; i++)
 			{
 				//makes sure lines with same points aren't tested for intersection
                 		if(sharePoint(ep, intTempList[i]) || sharePoint(ep, intTempList[i+1]) || sharePoint(fp, intTempList[i]) || sharePoint(fp, intTempList[i+1]))
@@ -67,12 +65,13 @@ void tessellate(void)
 				}
 			}
 	
+			/*
 			if(!intersectFlag)		//check if interior angle is smaller than anterior angle
 			{
-				v1 = vector((ep.x - mp.x), (ep.y - mp.y), 0);
-				v2 = vector((ep.x - pointList[pi+3].x), (ep.y - pointList[pi+3].y), 0);
+				v1 = vector3D((ep.x - mp.x), (ep.y - mp.y), 0);
+				v2 = vector3D((ep.x - intTempList[pi+3].x), (ep.y - intTempList[pi+3].y), 0);
 
-				if(sign(crossProduct(v1, v2).z) == direction)			//check if next two lines are CCW
+				if(sign(crossProduct(v1, v2).z) == 1)			//check if next two lines are CCW
 				{
 					if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, intTempList[pi+3]))		//check if line is an interior line
 					{
@@ -80,23 +79,28 @@ void tessellate(void)
 					}
 				}
 			}
-		
+			*/
+
 			//check if the lines intersect
 			if(!intersectFlag)
 			{
 				//add triangle to triangle list
                 		trianglelist.push_back(triangle(fp, mp, ep));
-                		ti++;
+				/*
+				cout << "fp : ( " << fp.x << " , " << fp.y  << " )" << "	";
+				cout << "mp : ( " << mp.x << " , " << mp.y  << " )" << "	";
+				cout << "ep : ( " << ep.x << " , " << ep.y  << " )" << endl;
+				*/
 
                 		//remove the midpoint
 				vertCount--;
 	
                 		//move up all the points that aren't null
-                		for(int i = pi+1; i < vertCount; i++)
+                		for(int i = pi+1; i < vertCount+1; i++)
                 		{
                     			tempList[i] = tempList[i+1];
                 		}
-				tempList[vertCount] = vertex(0, 0, 0, 0);
+				tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
 
 				//return to first 3 points
 				pi = 0;
@@ -113,38 +117,31 @@ void tessellate(void)
 			vertCount--;
 
 			//move up all points that aren't null
-			for(int i = pi+1; i < vertCount; i++)
+			for(int i = pi+1; i < vertCount+1; i++)
 			{
-				templist[i] = tempList[i+1];
+				tempList[i] = tempList[i+1];
 			}
+			tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
         	}
         	else
         	{
             		//move to the next set of 3 points 
             		pi++;
         	}
+		
+		/*
+		cout << "------------------------------------------------------------------------------------------" << endl;
+		for(int i = 0; i < vertexlist.size(); i++)
+		{	
+			cout << i << ":  ( " << tempList[i].x << " , " << tempList[i].y  << " )" << endl;
+		}
+		cout << "------------------------------------------------------------------------------------------" << endl;
+		*/
 	}
 
 	//Add last 3 vertices
 	trianglelist.push_back(triangle(tempList[0], tempList[1], tempList[2]));
-	ti++;
-
-
-	//***move to graphics class
-	//either draw the tesselated filled polygon or draw triangle outlines and list out the triangle information
-	glClear ( GL_COLOR_BUFFER_BIT );
-	glColor3f(0.0, 0.0, 1.0);	//change color to blue
-	for(int i = 0; i < ti; i++)
-	{
-		glBegin ( GL_POLYGON );
-			glVertex2i ( triangleList[i].v1.x, triangleList[i].v1.y );
-			glVertex2i ( triangleList[i].v2.x, triangleList[i].v2.y );	
-        		glVertex2i ( triangleList[i].v3.x, triangleList[i].v3.y );		
-		glEnd();
-	}
-
-	glFlush();
-	//***
+	//trianglelist[trianglelist.size()-1] = triangle(tempList[0], tempList[1], tempList[2]);
 }
 
 int sign(int num)
@@ -168,8 +165,8 @@ bool sharePoint(vertex p1, vertex p2)		//determines if two points are the same
 double vectorAngle(vertex fp, vertex mp, vertex ep)
 {
 	//find the angle of two vectors sharing middle point
-	vector v1 = (vector){.x = (mp.x - fp.x), .y = (mp.y - fp.y), .z = 0};
-	vector v2 = (vector){.x = (mp.x - ep.x), .y = (mp.y - ep.y), .z = 0};
+	vector3D v1 = vector3D( (mp.x - fp.x), (mp.y - fp.y), 0);
+	vector3D v2 = vector3D( (mp.x - ep.x), (mp.y - ep.y), 0);
 
 	double va = acos( ((double)(dotProduct(v1, v2))) / (vectorMagnitude(v1) * vectorMagnitude(v2)) );
 	return va;
@@ -216,7 +213,7 @@ bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 	}
 }
 
-int dotProduct(vector v1, vector v2)
+int dotProduct(vector3D v1, vector3D v2)
 {
 	int dp;
 	dp = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
@@ -224,16 +221,16 @@ int dotProduct(vector v1, vector v2)
 	return dp;
 }
 
-double vectorMagnitude(vector v1)
+double vectorMagnitude(vector3D v1)
 {
     double vm;
     vm  = sqrt((v1.x * v1.x) + (v1.y * v1.y));
     return vm;
 }
 
-vector crossProduct(vector v1, vector v2)
+vector3D crossProduct(vector3D v1, vector3D v2)
 {
-	vector cp;
+	vector3D cp;
 	cp.x = (v1.y * v2.z) - (v2.y * v1.z);
 	cp.y = (v1.x * v2.z) - (v2.x * v1.z);
 	cp.z = (v1.x * v2.y) - (v2.x * v1.y);
