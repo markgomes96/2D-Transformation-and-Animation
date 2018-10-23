@@ -8,7 +8,12 @@ using namespace std;
 
 vector<vertex> vertexlist;
 vector<triangle> trianglelist;
-float DELTA_SPIN = 0.0;
-float SPIN  = 0.0;
+
+float deltaspin = 0.0;				//rotation
+float spin = 0.0;
+vector3D scalarvect = vector3D(1.0, 1.0, 1.0);	//scaling
+int reflection = 1;				//reflection
+
+vertex cp = vertex(WINDOW_MAX_X/2, WINDOW_MAX_Y/2, 0, 1);		//center point
 
 #endif

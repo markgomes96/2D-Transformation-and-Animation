@@ -8,7 +8,12 @@ using namespace std;
 
 extern vector<vertex> vertexlist;
 extern vector<triangle> trianglelist;
-float DELTA_SPIN;
-float SPIN;
+
+extern float deltaspin;
+extern float spin;
+extern vector3D scalarvect;
+extern int reflection;
+
+extern vertex cp;
 
 #endif

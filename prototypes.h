@@ -1,7 +1,15 @@
 #include "structs.h"
 
 void display( void );				//display.cc
-void PipeLine( float *vp, int vpts )
+void PipeLine( vertex* , int );
+void spinDisplay(void);
+
+void applyTransformation( vertex* , int , float* );	//transmat.cc
+void matrixVectorMult( int , float* , float* );
+void buildTranslate( float , float , float , float* );
+void buildRotateZ( float , float* );
+void buildScale( vector3D , float* );
+void buildReflectVert( int , float* );
 
 void mouse( int , int , int , int );		//input.cc
 void keyboard( unsigned char , int , int );

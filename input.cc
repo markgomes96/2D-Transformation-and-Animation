@@ -1,6 +1,9 @@
 #include "includes.h"
 #include "prototypes.h"
 
+#include "Graphics.h"
+#include "globals.h"
+
 void mouse( int button, int state, int x, int y )
 { 	
 	switch (button) 
@@ -8,15 +11,15 @@ void mouse( int button, int state, int x, int y )
         	case GLUT_LEFT_BUTTON:
 		    	if (state == GLUT_DOWN)
 		    	{
-		        	DELTA_SPIN = DELTA_SPIN - 1.0;
-		        	glutIdleFunc(SpinDisplay);
+		        	deltaspin = deltaspin - 2.0;
+		        	glutIdleFunc(spinDisplay);
 		    	}
             	break;
         	case GLUT_RIGHT_BUTTON:
 		    	if (state == GLUT_DOWN)
 		    	{
-		        	DELTA_SPIN = DELTA_SPIN + 1.0;
-		        	glutIdleFunc(SpinDisplay);
+		        	deltaspin = deltaspin + 2.0;
+		        	glutIdleFunc(spinDisplay);
 		    	}
             	break;
         	default:
@@ -29,37 +32,38 @@ void keyboard( unsigned char key, int x, int y )
 	// Fill the polygon in with tesselation
 	if ( key == 'f' || key == 'F')
 	{
-		//drawPolygon();
+		
 	}
 	
 	// Display outlines of triangles used in tesselation
 	if ( key == 't' || key == 'T')
 	{
-		//tesselatePolygon(false);
+		
 	}
 
 	// Return polyon to an outline
 	if ( key == 'l' || key == 'L')
 	{
-		//drawOutline();
+		
 	}
 
 	// Reflect current image about the vertical axis at center point
 	if ( key == 'r' || key == 'R')
 	{
-		//tesselatePolygon(false);
+		reflection = reflection * -1;
+		spin = spin * -1;
 	}
 
 	// Stops any animations
 	if ( key == 's' || key == 'S')
 	{
-		//drawOutline();
+		
 	}
 
 	// Stops any animations and return tree to intial position
 	if ( key == 'i' || key == 'I')
 	{
-		//drawOutline();
+		
 	}
 	
 	// Exit the program

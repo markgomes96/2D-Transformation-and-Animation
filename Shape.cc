@@ -13,10 +13,10 @@ using namespace std;
 void Shape :: defineBasePoints(void)
 {
   vector<vertex> vl;
-  vl.push_back(vertex(700, 475, 0, 0));    //add in base of tree, goes CCW
-  vl.push_back(vertex(200, 425, 0, 0));
-  vl.push_back(vertex(200, 575, 0, 0));
-  vl.push_back(vertex(700, 525, 0, 0));  
+  vl.push_back(vertex(700, 475, 0, 1.0));    //add in base of tree, goes CCW
+  vl.push_back(vertex(200, 425, 0, 1.0));
+  vl.push_back(vertex(200, 575, 0, 1.0));
+  vl.push_back(vertex(700, 525, 0, 1.0));  
   vertexlist = vl;
   
   createCircle(150, vertexlist.front().x - 50, vertexlist.front().y + ((vertexlist.back().y - vertexlist.front().y) / 2));    //add in circle top of tree
@@ -48,12 +48,12 @@ void Shape :: createCircle(int radius, int cx, int cy)
       y--;
     }
     
-    quad1.push_back(vertex((-x) + cx , y + cy, 0, 0));    //reflect point along circle symmetries
-    quad2.push_back(vertex(x + cx , y + cy, 0, 0));        //convert to world coordinates
-    quad3.push_back(vertex(y + cx, x + cy, 0, 0));
-    quad4.push_back(vertex(y + cx, (-x) + cy, 0, 0));
-    quad5.push_back(vertex(x + cx, (-y) + cy , 0, 0));
-    quad6.push_back(vertex((-x) + cx, (-y) + cy , 0, 0));
+    quad1.push_back(vertex((-x) + cx , y + cy, 0, 1.0));    //reflect point along circle symmetries
+    quad2.push_back(vertex(x + cx , y + cy, 0, 1.0));        //convert to world coordinates
+    quad3.push_back(vertex(y + cx, x + cy, 0, 1.0));
+    quad4.push_back(vertex(y + cx, (-x) + cy, 0, 1.0));
+    quad5.push_back(vertex(x + cx, (-y) + cy , 0, 1.0));
+    quad6.push_back(vertex((-x) + cx, (-y) + cy , 0, 1.0));
   }
   
   reverse(quad1.begin(), quad1.end());					//insert each segment in right order

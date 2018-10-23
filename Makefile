@@ -18,14 +18,14 @@ INCLUDES   = includes.h
 HEADERS    = constants.h structs.h Graphics.h Shape.h
 PROTOTYPES = prototypes.h
 GLOBALS    = globals.h
-OBJS 	   = Graphics.o input.o display.o Shape.o tessellate.o
+OBJS 	   = Graphics.o input.o display.o Shape.o tessellate.o transmat.o
 
 all : anitran
 
 anitran: main.o $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS) $(OBJS) 
 	$(C++) -o anitran main.o $(OBJS) $(INCDIRS) $(LIBDIRS) $(LDLIBS) 
 
-Graphics.o : Graphics.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES)
+Graphics.o : Graphics.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 	$(C++) -c Graphics.cc
  
 Shape.o : Shape.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
@@ -34,8 +34,11 @@ Shape.o : Shape.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 display.o : display.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 	$(C++) -c display.cc
 
-input.o : input.cc $(INCLUDES)
+input.o : input.cc $(INCLUDES) $(GLOBALS)
 	$(C++) -c input.cc
+
+transmat.o : transmat.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
+	$(C++) -c transmat.cc
 
 tessellate.o : tessellate.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 	$(C++) -c tessellate.cc

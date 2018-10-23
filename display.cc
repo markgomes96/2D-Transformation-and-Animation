@@ -6,62 +6,81 @@
 #include "Graphics.h"
 #include "globals.h"
 
-/*
-*convert vector list to an array
-*make global be an array
-*have pointer to temp array for transformed points
-*/
-
-
 void display( void )
 {
-	/*
-	int inPoints;             // The number of points in the arrow 
-	float point[MAX];         // Array to hold homogenous coordinates for arrow
-	float *apts;              // Pointer for point array 
-
-	struct vertex inVertexArray[MAX/4];	//array of vertices to hold points
-	struct vertex *invp;                	//Pointer for inVertexArray
- 
-	apts = &point[0];         // the pointer to the array of points 
-	invp = &inVertexArray[0]; // the pointer to the array of vertices
-	*/
-
 	glClear(GL_COLOR_BUFFER_BIT);		//clear the window
 
 	glColor3f(1.0, 1.0, 1.0);
 	glRecti(VIEWPORT_MIN_X, VIEWPORT_MIN_Y, VIEWPORT_MAX_X, VIEWPORT_MAX_Y);    //set viewport
     
-	Graphics::drawOutline(vertexlist, color(1.0, 0.0, 0.0));    //draw outline of shape
+	//Graphics::drawOutline(vertexlist, color(1.0, 0.0, 0.0));    //draw outline of shape
 
 	//tessellate();
 	//Graphics::drawTessPolygon(trianglelist, color(1.0, 0.0, 0.0));
 
-	/* Now start the process of rotating */
-	PipeLine( apts, inPoints );			//apply transformations
-	toVertex( apts, invp, inPoints );	
+	int vertCount = vertexlist.size();
+	vertex templist[vertCount];		//create temp array of current vertexlist
+	vertex *tmp;					//pointer to temp array
+	tmp = &templist[0];
+
+	vector<vertex>::iterator it;
+	int index = 0;
+	for(it = vertexlist.begin(); it != vertexlist.end(); ++it)	//copy vertex points over to a temp array
+	{
+		templist[index].x = it -> x;
+		templist[index].y = it -> y;
+		templist[index].z = it -> z;
+		templist[index].w = it -> w;
+		index++;
+	}
+
+	PipeLine(tmp, vertCount);			//apply transformations	
+
+	Graphics::drawOutline(tmp, vertCount, color(1.0, 0.0, 0.0));
 	
 	glutSwapBuffers(); 					//forces buffer to be drawn
 }
 
-void PipeLine( float *vp, int vpts )
+void PipeLine(vertex *vp, int vc)	//vp - pointer to temp array; vc - number of vertices
 {
-    // this routine will run the graphics transformation pipeline
-    /* Set up useful temporary variables */
-    float TransformationMatrix[16];
-    float *TM;
+	// this routine will run the graphics transformation pipeline
+	float transformMatrix[16];		//set up the tranformation matrix and pointer
+	float *tm;
+	tm = &transformMatrix[0];
 
-    /* Don't forget to initialize the ponter! */
-    TM = &TransformationMatrix[0];
+	//Apply Scalar
+	/*
+	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
+	applyTransformation( vp, vc, tm );
+	buildScale( scalarvect, tm );			//perform the scaling operation
+	applyTransformation( vp, vc, tm );
+	buildTranslate( cp.x, cp.y, 0.0,  tm );		//translate back to point
+	applyTransformation( vp, vc, tm );
+	*/
 
-    // Translate to origin  
-    buildTranslate( -WINDOW_MAX/2, -WINDOW_MAX/2, 0.0,  TM );
-    applyTransformation( vp, vpts, TM );   	
-    // Perform the rotation operation
-    buildRotateZ( SPIN, TM );	
-    applyTransformation( vp, vpts, TM );
-    // Translate back to point
-    buildTranslate( WINDOW_MAX/2, WINDOW_MAX/2, 0.0,  TM );
-    applyTransformation( vp, vpts, TM );   	
+	//Apply Rotation
+	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
+	applyTransformation( vp, vc, tm );
+	buildRotateZ( spin, tm );			//perform the rotation operation
+	applyTransformation( vp, vc, tm );
+	buildTranslate( cp.x, cp.y, 0.0,  tm );		//translate back to point
+	applyTransformation( vp, vc, tm );
 
+	//Apply Reflection
+	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
+	applyTransformation( vp, vc, tm );
+	buildReflectVert( reflection, tm );		//perform the reflection operation
+	applyTransformation( vp, vc, tm );
+	buildTranslate( cp.x, cp.y, 0.0,  tm );		//translate back to point
+	applyTransformation( vp, vc, tm );
+}
+
+void spinDisplay(void)
+{
+	spin = spin + deltaspin;
+	if (spin > 360.0)
+	{ 
+		spin = spin - 360.0;
+	}
+	glutPostRedisplay();
 }
