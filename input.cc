@@ -3,15 +3,25 @@
 
 void mouse( int button, int state, int x, int y )
 { 	
-	if ( button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN )	//handles right click
+	switch (button) 
 	{
-	
-	}
-	
-	if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )		//handles left click
-	{
-	
-	}
+        	case GLUT_LEFT_BUTTON:
+		    	if (state == GLUT_DOWN)
+		    	{
+		        	DELTA_SPIN = DELTA_SPIN - 1.0;
+		        	glutIdleFunc(SpinDisplay);
+		    	}
+            	break;
+        	case GLUT_RIGHT_BUTTON:
+		    	if (state == GLUT_DOWN)
+		    	{
+		        	DELTA_SPIN = DELTA_SPIN + 1.0;
+		        	glutIdleFunc(SpinDisplay);
+		    	}
+            	break;
+        	default:
+            	break;
+    	}
 }
 
 void keyboard( unsigned char key, int x, int y )

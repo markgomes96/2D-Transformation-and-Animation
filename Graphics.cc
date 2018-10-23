@@ -10,7 +10,7 @@ using namespace std;
 void Graphics :: myglutInit( int argc, char** argv )
 {
 	glutInit(&argc,argv);
-	glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(WINDOW_MAX_X, WINDOW_MAX_Y); 		                // set pixel window
 	glutInitWindowPosition(WINDOW_POS_X, WINDOW_POS_Y); 		// place window top left on display
 	glutCreateWindow("Polygon Animation");	                        //window title

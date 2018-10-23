@@ -8,5 +8,7 @@ using namespace std;
 
 extern vector<vertex> vertexlist;
 extern vector<triangle> trianglelist;
+float DELTA_SPIN;
+float SPIN;
 
 #endif
