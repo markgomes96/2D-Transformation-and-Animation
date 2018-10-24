@@ -12,6 +12,7 @@ void buildScale( vector3D , float* );
 void buildReflectVert( int , float* );
 
 void mouse( int , int , int , int );		//input.cc
+bool checkBounds( int , int );
 void keyboard( unsigned char , int , int );
 void SpecialInput( int , int , int );
 

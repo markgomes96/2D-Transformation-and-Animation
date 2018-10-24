@@ -6,20 +6,21 @@
 #include "Graphics.h"
 #include "globals.h"
 
+/*
+*Fix center point drawing/ rotating
+*Reshape the viewport
+*Start on clipping
+*/
+
 void display( void )
 {
 	glClear(GL_COLOR_BUFFER_BIT);		//clear the window
 
 	glColor3f(1.0, 1.0, 1.0);
 	glRecti(VIEWPORT_MIN_X, VIEWPORT_MIN_Y, VIEWPORT_MAX_X, VIEWPORT_MAX_Y);    //set viewport
-    
-	//Graphics::drawOutline(vertexlist, color(1.0, 0.0, 0.0));    //draw outline of shape
-
-	//tessellate();
-	//Graphics::drawTessPolygon(trianglelist, color(1.0, 0.0, 0.0));
 
 	int vertCount = vertexlist.size();
-	vertex templist[vertCount];		//create temp array of current vertexlist
+	vertex templist[vertCount];			//create temp array of current vertexlist
 	vertex *tmp;					//pointer to temp array
 	tmp = &templist[0];
 
@@ -34,11 +35,39 @@ void display( void )
 		index++;
 	}
 
-	PipeLine(tmp, vertCount);			//apply transformations	
+	if(animState == resetanim)	//reset transformation variables to default
+	{ 
+		deltaspin = 0.0;		
+		spin = 0.0;
+		scalarvect = vector3D(1.0, 1.0, 1.0);
+		reflection = 1;
+		animState = playanim;
+	}
 
-	Graphics::drawOutline(tmp, vertCount, color(1.0, 0.0, 0.0));
+	Graphics :: drawCenterPoint(cp, color(1.0, 0.137, 0.588));	//draw current center point
 	
-	glutSwapBuffers(); 					//forces buffer to be drawn
+	PipeLine(tmp, vertCount);		//apply transformations	 
+	
+	switch(displayState)		//display the transformed points
+	{
+		case outline : 
+			Graphics::drawOutline(tmp, vertCount, color(1.0, 0.0, 0.0));   
+			break;
+
+    		case tessfill :
+			Graphics::drawOutline(tmp, vertCount, color(0.0, 1.0, 0.0)); 
+			//tessellate();
+			//Graphics::drawTessPolygon(trianglelist, color(0.0, 1.0, 0.0));  
+			break;
+
+    		case tesstriangle : 
+			Graphics::drawOutline(tmp, vertCount, color(0.0, 0.0, 1.0)); 
+			//tessellate();
+			//Graphics::drawTessTriangle(trianglelist, color(0.0, 1.0, 0.0)); 
+			break;
+	}
+
+	glutSwapBuffers(); 				//swap buffers to draw new frame
 }
 
 void PipeLine(vertex *vp, int vc)	//vp - pointer to temp array; vc - number of vertices
@@ -49,38 +78,31 @@ void PipeLine(vertex *vp, int vc)	//vp - pointer to temp array; vc - number of v
 	tm = &transformMatrix[0];
 
 	//Apply Scalar
-	/*
 	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
 	applyTransformation( vp, vc, tm );
-	buildScale( scalarvect, tm );			//perform the scaling operation
-	applyTransformation( vp, vc, tm );
-	buildTranslate( cp.x, cp.y, 0.0,  tm );		//translate back to point
-	applyTransformation( vp, vc, tm );
-	*/
 
-	//Apply Rotation
-	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
-	applyTransformation( vp, vc, tm );
 	buildRotateZ( spin, tm );			//perform the rotation operation
 	applyTransformation( vp, vc, tm );
-	buildTranslate( cp.x, cp.y, 0.0,  tm );		//translate back to point
-	applyTransformation( vp, vc, tm );
 
-	//Apply Reflection
-	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
-	applyTransformation( vp, vc, tm );
 	buildReflectVert( reflection, tm );		//perform the reflection operation
 	applyTransformation( vp, vc, tm );
+
+	buildScale( scalarvect, tm );			//perform the scaling operation
+	applyTransformation( vp, vc, tm );
+
 	buildTranslate( cp.x, cp.y, 0.0,  tm );		//translate back to point
 	applyTransformation( vp, vc, tm );
 }
 
 void spinDisplay(void)
 {
-	spin = spin + deltaspin;
-	if (spin > 360.0)
-	{ 
-		spin = spin - 360.0;
+	if(animState != stopanim)
+	{
+		spin = spin + deltaspin;
+		if (spin > 360.0)
+		{ 
+			spin = spin - 360.0;
+		}
+		glutPostRedisplay();
 	}
-	glutPostRedisplay();
 }

@@ -1,6 +1,9 @@
 #ifndef STRUCTS
 #define STRUCTS
 
+enum DisplayState { outline, tessfill, tesstriangle };
+enum AnimState { playanim, stopanim, resetanim };
+
 typedef struct vertex 
 { 
 	float x;

@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "constants.h"
 #include "prototypes.h"
 
 #include "Graphics.h"
@@ -11,15 +12,44 @@ void mouse( int button, int state, int x, int y )
         	case GLUT_LEFT_BUTTON:
 		    	if (state == GLUT_DOWN)
 		    	{
-		        	deltaspin = deltaspin - 2.0;
-		        	glutIdleFunc(spinDisplay);
+				if(checkBounds(x, y))		//point within bounds
+				{
+					if(deltaspin > -10.0)		//max CCW spin at 10 degrees per iteration
+					{
+						deltaspin = deltaspin - 1.0;	//increase rotation in CCW
+		        			glutIdleFunc(spinDisplay);
+					}
+					animState = playanim;
+				}
+				else				//point outside bounds
+				{
+					scalarvect.x += 0.05;		//increase scale
+					scalarvect.y += 0.05;
+					glutPostRedisplay();
+				}
 		    	}
             	break;
         	case GLUT_RIGHT_BUTTON:
 		    	if (state == GLUT_DOWN)
 		    	{
-		        	deltaspin = deltaspin + 2.0;
-		        	glutIdleFunc(spinDisplay);
+				if(checkBounds(x, y))		//point within bounds
+				{
+					if(deltaspin < 10.0)		//max CW spin at 10 degrees per iteration
+					{
+						deltaspin = deltaspin + 1.0;	//increase rotation CW
+		        			glutIdleFunc(spinDisplay);
+					}
+					animState = playanim;
+				}
+				else				//point outside bounds
+				{
+					if(scalarvect.x > 0.0)		//prevent scale from reversing
+					{
+						scalarvect.x -= 0.05;		//decrease scale
+						scalarvect.y -= 0.05;
+						glutPostRedisplay();
+					}
+				}
 		    	}
             	break;
         	default:
@@ -27,49 +57,48 @@ void mouse( int button, int state, int x, int y )
     	}
 }
 
+bool checkBounds(int x, int y)		//returns true is within bounds
+{
+	if(x > VIEWPORT_MIN_X && x < VIEWPORT_MAX_X)
+	{
+		if(y > VIEWPORT_MIN_Y && y < VIEWPORT_MAX_Y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void keyboard( unsigned char key, int x, int y )
 { 
-	// Fill the polygon in with tesselation
-	if ( key == 'f' || key == 'F')
+	if ( key == 'f' || key == 'F')		// Fill the polygon in with tesselation
 	{
-		
-	}
-	
-	// Display outlines of triangles used in tesselation
-	if ( key == 't' || key == 'T')
+		displayState = tessfill;
+	}	
+	if ( key == 't' || key == 'T')		// Display outlines of triangles used in tesselation
 	{
-		
+		displayState = tesstriangle;
 	}
-
-	// Return polyon to an outline
-	if ( key == 'l' || key == 'L')
+	if ( key == 'l' || key == 'L')		// Return polyon to an outline
 	{
-		
+		displayState = outline;
 	}
-
-	// Reflect current image about the vertical axis at center point
-	if ( key == 'r' || key == 'R')
+	if ( key == 'r' || key == 'R')		//reflect current image about the vertical axis at center point
 	{
 		reflection = reflection * -1;
 		spin = spin * -1;
 	}
-
-	// Stops any animations
-	if ( key == 's' || key == 'S')
+	if ( key == 's' || key == 'S')		//stops any animations
 	{
-		
+		animState = stopanim;
 	}
-
-	// Stops any animations and return tree to intial position
-	if ( key == 'i' || key == 'I')
+	if ( key == 'i' || key == 'I')		//stops any animations and return tree to intial position
 	{
-		
+		animState = resetanim;
 	}
-	
-	// Exit the program
-	if ( key == 'q' || key == 'Q') 
+	if ( key == 'q' || key == 'Q') 		//exit the program
 	{
-		printf("Goodbye...\n");
+		printf("FARWELL, POWERING OFFFF...\n");
 		exit(0);
 	}
 }
@@ -79,19 +108,19 @@ void SpecialInput(int key, int x, int y)
 	switch(key)		//moves the center point 5 pixels in inputed direction
 	{
 		case GLUT_KEY_UP:
-			printf("up pressed");
+			cp.y += 5;
 			break;
 			
 		case GLUT_KEY_DOWN:
-			printf("down pressed");
+			cp.y -= 5;
 			break;
 			
 		case GLUT_KEY_LEFT:
-			printf("left pressed");
+			cp.x -= 5;
 			break;
 			
 		case GLUT_KEY_RIGHT:
-			printf("right pressed");
+			cp.y += 5;
 			break;
 	}
 }

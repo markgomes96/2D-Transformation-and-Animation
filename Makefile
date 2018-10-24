@@ -34,7 +34,7 @@ Shape.o : Shape.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 display.o : display.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 	$(C++) -c display.cc
 
-input.o : input.cc $(INCLUDES) $(GLOBALS)
+input.o : input.cc $(INCLUDES) $(HEADERS) $(GLOBALS)
 	$(C++) -c input.cc
 
 transmat.o : transmat.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)

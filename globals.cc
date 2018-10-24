@@ -14,6 +14,9 @@ float spin = 0.0;
 vector3D scalarvect = vector3D(1.0, 1.0, 1.0);	//scaling
 int reflection = 1;				//reflection
 
+DisplayState displayState = outline;
+AnimState animState = playanim;
+
 vertex cp = vertex(WINDOW_MAX_X/2, WINDOW_MAX_Y/2, 0, 1);		//center point
 
 #endif

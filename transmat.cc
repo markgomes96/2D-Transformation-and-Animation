@@ -14,12 +14,12 @@ void applyTransformation(vertex *vp, int vc, float *tm ) 	//applies the given tr
 
 	for (int i = 0; i < vc; i++)
 	{
-		*(tmp+0) = (vp+i) -> x;
+		*(tmp+0) = (vp+i) -> x;		//move point over to temp float array
 		*(tmp+1) = (vp+i) -> y;
 		*(tmp+2) = (vp+i) -> z;
 		*(tmp+3) = (vp+i) -> w;
-		matrixVectorMult( 4, tm, tmp);
-		(vp+i) -> x = *(tmp+0); 
+		matrixVectorMult( 4, tm, tmp);		//apply transformation to point
+		(vp+i) -> x = *(tmp+0); 	//store back the transformed point
 		(vp+i) -> y = *(tmp+1); 
 		(vp+i) -> z = *(tmp+2); 
 		(vp+i) -> w = *(tmp+3); 
@@ -40,7 +40,7 @@ void matrixVectorMult (int SIZE, float *pA, float *pB)	//pA -> matrix A; pB -> m
 	{
 		for (j = 0; j < SIZE; j++)
 		{
-			temp[i] += *(pA+(i*SIZE+j)) * *(pB+j);
+			temp[i] += *(pA+(i*SIZE+j)) * *(pB+j);	//pointer magic
 		}
 	}
    

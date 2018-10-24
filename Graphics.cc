@@ -21,8 +21,8 @@ void Graphics :: myInit(void)
 	//standard OpenGL attributes
 	glClearColor(0.0, 0.0, 0.0, 1.0);           //black background
 	glColor3f(1.0, 0.0, 0.0);                   // draw in red
-	glPointSize(10.0);
-	glLineWidth(3.0);
+	glPointSize(1.0);
+	glLineWidth(1.0);
 
 	//set up viewing window with origin lower left
 	glMatrixMode(GL_PROJECTION);
@@ -31,12 +31,16 @@ void Graphics :: myInit(void)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void Graphics :: drawPoint( int x, int y )		//Draw point onto the screen
+void Graphics :: drawCenterPoint(vertex v, color c)		//Draw point onto the screen
 {
-	glColor3ub( 255, 0, 0 );
+	glColor3f (c.red, c.green, c.blue);		//change color to prefered color
     
-	glBegin(GL_POINTS);
-		glVertex2i( x, y ); 
+	glBegin( GL_LINE );
+		glVertex2f( v.x - 10 , v.y);		//draw cross at center point
+		glVertex2f( v.x + 10 , v.y);
+
+		glVertex2f( v.x , v.y + 10);
+		glVertex2f( v.x , v.y - 10);
 	glEnd();
 }
 
@@ -48,7 +52,7 @@ void Graphics :: drawOutline(vertex *vl, int vc, color c)		//Draw outline of pol
 	glBegin ( GL_LINE_LOOP );
 		for (int i = 0; i < vc; i++)
 		{
-			glVertex2f ( (vl+i) -> x, (vl+i) -> y );
+			glVertex2f( (vl+i) -> x, (vl+i) -> y );
 		}
 	glEnd();
 }

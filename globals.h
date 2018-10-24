@@ -14,6 +14,9 @@ extern float spin;
 extern vector3D scalarvect;
 extern int reflection;
 
+extern DisplayState displayState;
+extern AnimState animState;
+
 extern vertex cp;
 
 #endif
