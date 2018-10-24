@@ -35,7 +35,7 @@ void Graphics :: drawCenterPoint(vertex v, color c)		//Draw point onto the scree
 {
 	glColor3f (c.red, c.green, c.blue);		//change color to prefered color
     
-	glBegin( GL_LINE );
+	glBegin( GL_LINES );
 		glVertex2f( v.x - 10 , v.y);		//draw cross at center point
 		glVertex2f( v.x + 10 , v.y);
 

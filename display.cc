@@ -44,7 +44,7 @@ void display( void )
 		animState = playanim;
 	}
 
-	Graphics :: drawCenterPoint(cp, color(1.0, 0.137, 0.588));	//draw current center point
+	Graphics :: drawCenterPoint(cp, color(1.0, 0.5, 0.8));	//draw current center point
 	
 	PipeLine(tmp, vertCount);		//apply transformations	 
 	
