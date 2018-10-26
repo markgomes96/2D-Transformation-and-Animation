@@ -82,7 +82,7 @@ void buildScale( vector3D sv, float *pA )		//constructs scaling matrix to scale 
 void buildReflectVert( int ref, float *pA )		//constructs reflection matrix to reflect vertically
 {
 	pA[ 0] = ref*1.0; pA[ 1] = 0.0; pA[ 2] = 0.0; pA[ 3] = 0.0;
-	pA[ 4] =     0.0; pA[ 5] = ref*1.0; pA[ 6] = 0.0; pA[ 7] = 0.0;
+	pA[ 4] =     0.0; pA[ 5] = 1.0; pA[ 6] = 0.0; pA[ 7] = 0.0;
 	pA[ 8] =     0.0; pA[ 9] = 0.0; pA[10] = 1.0; pA[11] = 0.0;
 	pA[12] =     0.0; pA[13] = 0.0; pA[14] = 0.0; pA[15] = 1.0;
 }

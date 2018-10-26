@@ -96,11 +96,19 @@ void keyboard( unsigned char key, int x, int y )
 	{
 		animState = resetanim;
 	}
+	if ( key == 'b' || key == 'B')		//toggles on/off bound resizing
+	{
+		if(resizeBoundMode)
+			resizeBoundMode = false;
+		else
+			resizeBoundMode = true;
+	}
 	if ( key == 'q' || key == 'Q') 		//exit the program
 	{
 		printf("FARWELL, POWERING OFFFF...\n");
 		exit(0);
 	}
+	glutPostRedisplay();
 }
 
 void SpecialInput(int key, int x, int y)
@@ -108,19 +116,52 @@ void SpecialInput(int key, int x, int y)
 	switch(key)		//moves the center point 5 pixels in inputed direction
 	{
 		case GLUT_KEY_UP:
-			cp.y += 5;
+			if(resizeBoundMode)
+			{
+				viewportMinY -= 5;
+				viewportMaxY += 5;
+			}
+			else
+			{
+				cp.y += 5;
+			}
 			break;
 			
 		case GLUT_KEY_DOWN:
-			cp.y -= 5;
+			if(resizeBoundMode)
+			{
+				viewportMinY += 5;
+				viewportMaxY -= 5;
+			}
+			else
+			{
+				cp.y -= 5;
+			}
 			break;
 			
 		case GLUT_KEY_LEFT:
-			cp.x -= 5;
+			if(resizeBoundMode)
+			{
+				viewportMinX += 5;
+				viewportMaxX -= 5;
+			}
+			else
+			{
+				cp.x -= 5;
+			}
 			break;
 			
 		case GLUT_KEY_RIGHT:
-			cp.y += 5;
+			if(resizeBoundMode)
+			{
+				viewportMinX -= 5;
+				viewportMaxX += 5;
+			}
+			else
+			{
+				cp.x += 5;
+			}
 			break;
 	}
+	glutPostRedisplay();
 }

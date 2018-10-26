@@ -19,4 +19,10 @@ extern AnimState animState;
 
 extern vertex cp;
 
+extern float viewportMinX;
+extern float viewportMaxX;
+extern float viewportMinY;
+extern float viewportMaxY;
+extern bool resizeBoundMode;
+
 #endif

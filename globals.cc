@@ -14,9 +14,15 @@ float spin = 0.0;
 vector3D scalarvect = vector3D(1.0, 1.0, 1.0);	//scaling
 int reflection = 1;				//reflection
 
-DisplayState displayState = outline;
+DisplayState displayState = outline;		//states
 AnimState animState = playanim;
 
 vertex cp = vertex(WINDOW_MAX_X/2, WINDOW_MAX_Y/2, 0, 1);		//center point
+
+float viewportMinX = 0.0;		//resize boundary
+float viewportMaxX = 0.0;
+float viewportMinY = 0.0;
+float viewportMaxY = 0.0;
+bool resizeBoundMode = false;
 
 #endif

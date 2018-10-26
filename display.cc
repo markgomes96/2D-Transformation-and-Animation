@@ -17,7 +17,7 @@ void display( void )
 	glClear(GL_COLOR_BUFFER_BIT);		//clear the window
 
 	glColor3f(1.0, 1.0, 1.0);
-	glRecti(VIEWPORT_MIN_X, VIEWPORT_MIN_Y, VIEWPORT_MAX_X, VIEWPORT_MAX_Y);    //set viewport
+	glRecti(viewportMinX, viewportMinY, viewportMaxX, viewportMaxY);    //set viewport
 
 	int vertCount = vertexlist.size();
 	vertex templist[vertCount];			//create temp array of current vertexlist
@@ -81,10 +81,10 @@ void PipeLine(vertex *vp, int vc)	//vp - pointer to temp array; vc - number of v
 	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
 	applyTransformation( vp, vc, tm );
 
-	buildRotateZ( spin, tm );			//perform the rotation operation
+	buildReflectVert( reflection, tm );		//perform the reflection operation
 	applyTransformation( vp, vc, tm );
 
-	buildReflectVert( reflection, tm );		//perform the reflection operation
+	buildRotateZ( spin, tm );			//perform the rotation operation
 	applyTransformation( vp, vc, tm );
 
 	buildScale( scalarvect, tm );			//perform the scaling operation
