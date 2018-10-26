@@ -16,6 +16,8 @@ bool checkBounds( int , int );
 void keyboard( unsigned char , int , int );
 void SpecialInput( int , int , int );
 
+void clipPolygon( vertex* , int , vertex* , int );
+
 void tessellate( void );		//tessellate.cc
 int sign( int );
 bool sharePoint( vertex , vertex );

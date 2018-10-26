@@ -2,11 +2,10 @@
 #include "constants.h"
 #include "structs.h"
 #include "prototypes.h"
-
 #include "Graphics.h"
 #include "globals.h"
 
-void applyTransformation(vertex *vp, int vc, float *tm ) 	//applies the given transformation matrix TM to the vector vp containing
+void applyTransformation(vertex *vp, int vc, float *tm) 	//applies the given transformation matrix TM to the vector vp containing
 {
 	float temp[4];
 	float *tmp;

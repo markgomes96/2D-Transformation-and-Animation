@@ -2,7 +2,6 @@
 #include "constants.h"
 #include "structs.h"
 #include "prototypes.h"
-
 #include "Graphics.h"
 #include "globals.h"
 
