@@ -28,7 +28,11 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 	vector<vertex> inputlist;
 	vector<vertex> outputlist;
 
-	inputlist = *vp;	//move vp over to input list *error*
+	for(int i = 0; i < vc; i++)		//move vp over to input list
+	{
+		inputlist.push_back(*(vp+i));
+	}
+
 	for(int i = 0; i < bpc; i++)		//iterate through all boundary edges
 	{
 		boundstart = vertex((bp+i) -> x, (bp+i) -> y, (bp+i) -> z);		//update bound vertices and vectors
@@ -76,6 +80,7 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 			}
 		}
 		inputlist = outputlist;		//copy over output to new input
+		outputlist.clear();		//empty out the outputlist
 	}
 }
 
