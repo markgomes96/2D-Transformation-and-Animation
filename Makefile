@@ -18,7 +18,7 @@ INCLUDES   = includes.h
 HEADERS    = constants.h structs.h Graphics.h Shape.h
 PROTOTYPES = prototypes.h
 GLOBALS    = globals.h
-OBJS 	   = Graphics.o input.o display.o Shape.o tessellate.o transmat.o
+OBJS 	   = Graphics.o input.o display.o Shape.o tessellate.o transmat.o clipping.o
 
 all : anitran
 
@@ -39,6 +39,9 @@ input.o : input.cc $(INCLUDES) $(HEADERS) $(GLOBALS)
 
 transmat.o : transmat.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 	$(C++) -c transmat.cc
+
+clipping.o : clipping.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
+	$(C++) -c clipping.cc
 
 tessellate.o : tessellate.cc $(INCLUDES) $(HEADERS) $(PROTOTYPES) $(GLOBALS)
 	$(C++) -c tessellate.cc

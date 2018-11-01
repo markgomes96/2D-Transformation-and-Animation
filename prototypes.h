@@ -16,7 +16,10 @@ bool checkBounds( int , int );
 void keyboard( unsigned char , int , int );
 void SpecialInput( int , int , int );
 
-void clipPolygon( vertex* , int , vertex* , int );
+void clipPolygon( vertex*, int , vertex* , int );		//clipping.cc
+vertex getLineIntersection( vertex , vertex , vertex , vertex );
+bool pointWithinLineBounds( vertex , vertex , vertex );
+
 
 void tessellate( void );		//tessellate.cc
 int sign( int );

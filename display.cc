@@ -19,9 +19,14 @@ void display( void )
 	glRecti(viewportMinX, viewportMinY, viewportMaxX, viewportMaxY);    //set viewport
 
 	int vertCount = vertexlist.size();
-	vertex templist[vertCount];			//create temp array of current vertexlist
+	vertex templist[vertCount*2];			//create temp array of current vertexlist
 	vertex *tmp;					//pointer to temp array
 	tmp = &templist[0];
+
+	vertex boundlist[4] = {vertex(viewportMinX, viewportMinY, 0, 1), vertex(viewportMaxX, viewportMinY, 0, 1), 
+				vertex(viewportMaxX, viewportMaxY, 0, 1), vertex(viewportMinX, viewportMaxY, 0, 1)};
+	vertex *boundtmp;
+	boundtmp = &boundlist[0];
 
 	vector<vertex>::iterator it;
 	int index = 0;
@@ -33,7 +38,7 @@ void display( void )
 		templist[index].w = it -> w;
 		index++;
 	}
-
+	
 	if(animState == resetanim)	//reset transformation variables to default
 	{ 
 		deltaspin = 0.0;		
@@ -47,20 +52,34 @@ void display( void )
 	
 	PipeLine(tmp, vertCount);		//apply transformations	 
 	
+	//***Construction Zone : CATION***
+	clipPolygon(tmp, vertCount, boundtmp, 4);		//clip polygon by viewport boundaries
+	//***
+
+	vector<vertex> drawlist;
+	int ind = 0;
+	while(templist[ind].w == 1)
+	{
+		drawlist.push_back(templist[ind]);
+		ind++;
+		if(ind == (vertCount*2))
+			break;
+	}
+
 	switch(displayState)		//display the transformed points
 	{
 		case outline : 
-			Graphics::drawOutline(tmp, vertCount, color(1.0, 0.0, 0.0));   
+			Graphics::drawOutline(drawlist, color(1.0, 0.0, 0.0));   
 			break;
 
     		case tessfill :
-			Graphics::drawOutline(tmp, vertCount, color(0.0, 1.0, 0.0)); 
+			Graphics::drawOutline(drawlist, color(0.0, 1.0, 0.0)); 
 			//tessellate();
 			//Graphics::drawTessPolygon(trianglelist, color(0.0, 1.0, 0.0));  
 			break;
 
     		case tesstriangle : 
-			Graphics::drawOutline(tmp, vertCount, color(0.0, 0.0, 1.0)); 
+			Graphics::drawOutline(drawlist, color(0.0, 0.0, 1.0)); 
 			//tessellate();
 			//Graphics::drawTessTriangle(trianglelist, color(0.0, 1.0, 0.0)); 
 			break;

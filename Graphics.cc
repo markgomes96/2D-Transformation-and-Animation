@@ -45,14 +45,21 @@ void Graphics :: drawCenterPoint(vertex v, color c)		//Draw point onto the scree
 }
 
 
-void Graphics :: drawOutline(vertex *vl, int vc, color c)		//Draw outline of polygon with line loops
+void Graphics :: drawOutline(vector<vertex> vl, color c)		//Draw outline of polygon with line loops
 {
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_LINE_LOOP );
+		/*
 		for (int i = 0; i < vc; i++)
 		{
 			glVertex2f( (vl+i) -> x, (vl+i) -> y );
+		}
+		*/
+		vector<vertex>::iterator it;
+  		for(it = vl.begin(); it != vl.end(); it++)
+		{
+			glVertex2i ( it -> x , it -> y );
 		}
 	glEnd();
 }
@@ -62,7 +69,7 @@ void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon 
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_POLYGON );
-  	vector<vertex>::iterator it;
+  		vector<vertex>::iterator it;
   		for(it = vl.begin(); it != vl.end(); it++)
 		{
 			glVertex2i ( it -> x , it -> y );
