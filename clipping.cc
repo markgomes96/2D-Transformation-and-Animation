@@ -18,14 +18,26 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 	vector3D cpvect;
 	bool insideBounds = false;
 	bool isColinear = false;
+	boundtracker boundtrack = boundtracker(false, -1);
 	vertex intpoint;
 	vector<vertex> inputlist;
 	vector<vertex> outputlist;
+	inputlist.clear();
+	outputlist.clear();
+
+	/***
+	*Make input list out of clipvertex -> (float x, y, z, w, bool isIntVert, intOut, boundIndex) 
+	*Remove other stuff
+	***/	
 
 	for(int i = 0; i < vc; i++)		//move vp over to input list
 	{
 		inputlist.push_back(*(vp+i));
-		//cout << "( " << (vp+i) -> x << " , " << (vp+i) -> y << " , " << (vp+i) -> z << " , " << (vp+i) -> w << " )" << endl << endl;
+		(vp+i) -> x = 0.0;			//zero out temp array
+		(vp+i) -> y = 0.0;
+		(vp+i) -> z = 0.0;
+		(vp+i) -> w = 0.0;
+		//cout << "( " << (vp+i) -> x << " , " << (vp+i) -> y << " , " << (vp+i) -> z << " , " << (vp+i) -> w << " )" << endl;
 	}
 	
 	for(int i = 0; i < bpc; i++)		//iterate through all boundary edges
@@ -39,8 +51,6 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 
 		boundvect = vector3D( boundend.x - boundstart.x , boundend.y - boundstart.y , boundend.z - boundstart.z );
 
-		cout << "***boundvect : " << i << " < " << boundvect.x << " , " << boundvect.y << " , " << boundvect.z << " >***" << endl << endl;
-
 		for(int j = 0; j < inputlist.size(); j++)	//check boundary intersection for all lines
 		{
 			polystart = vertex(inputlist[j].x, inputlist[j].y, inputlist[j].z, 1);		//update poly vertices and vectors
@@ -52,12 +62,7 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 
 			polyvect = vector3D( boundstart.x - polystart.x , boundstart.y - polystart.y , boundstart.z - polystart.z );
 
-			cout << "polyvect : " << j << " < " << polyvect.x << " , " << polyvect.y << " , " << polyvect.z << " >" << endl << endl;
-
-			//******************WORKING FLAG************************
-
 			cpvect = crossProduct(polyvect, boundvect);		//check if first poly point is outside/inside
-			cout << "crossproduct : " << cpvect.z << endl << endl;
 			if(cpvect.z != 0)
 			{
 				if(cpvect.z < 0)			//point is outside bounds
@@ -69,38 +74,53 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 			{
 				isColinear = true;
 			}
-
+		
 			if(!isColinear)
 			{
 				intpoint = getLineIntersection(boundstart, boundend, polystart, polyend);	//get point of line intersection
-				cout << "INTERSECTION POINT : " << "( " << intpoint.x << " , " << intpoint.y << " )" << endl << endl;
+
 				if(pointWithinLineBounds(intpoint, polystart, polyend))				//check if point is within line segment bounds
 				{
-					cout << "---POINT WITHIN LINE BOUNDS---" << endl << endl;
-					if(insideBounds = false)	//going outside -> inside
+					if(insideBounds == false)	//going outside -> inside
 					{
+						if(boundtrack.wentOutside == true && boundtrack.boundIndex != i)
+						{
+							//*atempt cyclical thing for i = 0?
+							outputlist.push_back(vertex((bp+(boundtrack.boundIndex)+1) -> x, 
+								(bp+(boundtrack.boundIndex)+1) -> y, (bp+(boundtrack.boundIndex)+1) -> z, 1));
+							boundtrack = boundtracker(false, -1);
+						}
+
 						outputlist.push_back(intpoint);		//add boundary intercept
 					}
 					else				//going inside -> outside
 					{
 						outputlist.push_back(polystart);		//add inside point / boundary intercept
 						outputlist.push_back(intpoint);
+
+						boundtrack = boundtracker(true, i);
 					}
 				}
 				else 
 				{
-					cout << "---POINT NOT WITHIN LINE BOUNDS---" << endl << endl;
-					outputlist.push_back(polystart);		//add startpoint
+					if(insideBounds == false)
+					{
+						//don't add any vertices
+					}
+					else
+					{
+						outputlist.push_back(polystart);		//add startpoint
+					}
+					
 				}
 			}
 			else
 			{
 				outputlist.push_back(polystart);		//add startpoint if line is colinear with boundary
+				isColinear = false;
 			}
 		}
 
-		cout << "________________________________________________________" << endl;
-		
 		inputlist.clear();
 		for(int k = 0; k < outputlist.size(); k++)	//copy over output to new input
 		{
@@ -115,32 +135,40 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 	}
 }
 
-/*
-*Major problem for vertical lines ** check again
-*look into which point is looks at for inside/outside
-*/
 
 vertex getLineIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 {
 	vertex intpoint = vertex(0,0,0,1);
 	float slope1, yint1, slope2, yint2;
+	
+	vertex polystart, polyend;
+	if(p3.x < p4.x)
+	{
+		polystart = p3;
+		polyend = p4;
+	}
+	else
+	{
+		polystart = p4;
+		polyend = p3;
+	}
 
 	if(p1.x == p2.x)	//check for vertical bound line
 	{
-		if(p3.x == p4.x)		//if polygon line is also vertical
+		if(polystart.x == polyend.x)		//if polygon line is also vertical
 		{
 			intpoint.x = -1000;
 			intpoint.y = -1000;
 		}
-		else if(p3.y == p4.y)		//if polygon line is horizontal
+		else if(polystart.y == polyend.y)		//if polygon line is horizontal
 		{
 			intpoint.x = p1.x;
-			intpoint.y = p3.y;
+			intpoint.y = polystart.y;
 		}
 		else				//if polygon line has a slope
 		{
-			slope2 = (p4.y - p3.y) / (p4.x - p3.x);
-			yint2 = (slope2 * p3.x) + p3.y;
+			slope2 = (polyend.y - polystart.y) / (polyend.x - polystart.x);
+			yint2 = (-1 * slope2 * polystart.x) + polystart.y;
 
 			intpoint.x = p1.x;
 			intpoint.y = (slope2 * p1.x) + yint2;
@@ -148,20 +176,20 @@ vertex getLineIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 	}
 	else if(p1.y == p2.y)		//check for horizontal bound line
 	{
-		if(p3.y == p4.y)		//if polygon line is also horizontal
+		if(polystart.y == polyend.y)		//if polygon line is also horizontal
 		{
 			intpoint.x = -1000;
 			intpoint.y = -1000;
 		}
-		else if(p3.x == p4.x)		//if polygon line is vertical
+		else if(polystart.x == polyend.x)		//if polygon line is vertical
 		{
-			intpoint.x = p3.x;
+			intpoint.x = polystart.x;
 			intpoint.y = p1.y;
 		}
 		else				//if polygon line has a slope
 		{
-			slope2 = (p4.y - p3.y) / (p4.x - p3.x);
-			yint2 = (slope2 * p3.x) + p3.y;
+			slope2 = (polyend.y - polystart.y) / (polyend.x - polystart.x);
+			yint2 = (-1 * slope2 * polystart.x) + polystart.y;
 
 			intpoint.x = (p1.y - yint2) / slope2;
 			intpoint.y = p1.y;
@@ -169,28 +197,28 @@ vertex getLineIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 	}
 	else		//check for sloped bound line
 	{
-		if(p3.y == p4.y)		//if polygon line is horizontal
+		if(polystart.y == polyend.y)		//if polygon line is horizontal
 		{
 			slope1 = (p2.y - p1.y) / (p2.x - p1.x);
 			yint1 = (slope1 * p1.x) + p1.y;
 
-			intpoint.x = (p3.y - yint1) / slope1;
-			intpoint.y = p3.y;
+			intpoint.x = (polystart.y - yint1) / slope1;
+			intpoint.y = polystart.y;
 		}
-		else if(p3.x == p4.x)		//if polygon line is vertical
+		else if(polystart.x == polyend.x)		//if polygon line is vertical
 		{
 			slope1 = (p2.y - p1.y) / (p2.x - p1.x);
 			yint1 = (slope2 * p1.x) + p1.y;
 
-			intpoint.x = p3.x;
-			intpoint.y = (slope2 * p3.x) + yint1;
+			intpoint.x = polystart.x;
+			intpoint.y = (-1 * slope2 * polystart.x) + yint1;
 		}
 		else				//if polygon line has a slope
 		{
 			float slope1 = (p2.y - p1.y) / (p2.x - p1.x);
-			float yint1 = (slope1 * p1.x) + p1.y;
-			float slope2 = (p4.y - p3.y) / (p4.x - p3.x);
-			float yint2 = (slope2 * p3.x) + p3.y;
+			float yint1 = (-1 * slope1 * p1.x) + p1.y;
+			float slope2 = (polyend.y - polystart.y) / (polyend.x - polystart.x);
+			float yint2 = (-1 * slope2 * polystart.x) + polystart.y;
 
 			intpoint.x = (yint2 - yint1) / (slope1 - slope2);
 			intpoint.y = (slope1 * intpoint.x) + yint1;
@@ -199,6 +227,7 @@ vertex getLineIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 
 	return intpoint;
 }
+
 
 bool pointWithinLineBounds(vertex p, vertex lstart, vertex lend)
 {

@@ -74,4 +74,19 @@ typedef struct color
 	}
 } color;
 
+typedef struct boundtracker
+{
+	bool wentOutside;
+	int boundIndex;
+
+	boundtracker()
+	{};
+	
+	boundtracker(bool _wentOutside, int _boundIndex)
+	{
+		wentOutside = _wentOutside;
+		boundIndex = _boundIndex;
+	}
+} boundtracker;
+
 #endif

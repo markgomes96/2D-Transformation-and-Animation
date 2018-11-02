@@ -97,3 +97,4 @@ void Graphics :: drawTessPolygon(vector<triangle> tl, color c)
 		glEnd();
 	}
 }
+

@@ -22,9 +22,16 @@ void display( void )
 	vertex templist[vertCount*2];			//create temp array of current vertexlist
 	vertex *tmp;					//pointer to temp array
 	tmp = &templist[0];
+	for(int i = 0; i < (vertCount*2); i++)
+	{
+		templist[i].x = 0.0;
+		templist[i].y = 0.0;
+		templist[i].z = 0.0;
+		templist[i].w = 0.0;
+	}
 
-	vertex boundlist[4] = {vertex(viewportMinX, viewportMinY, 0, 1), vertex(viewportMaxX, viewportMinY, 0, 1), 
-				vertex(viewportMaxX, viewportMaxY, 0, 1), vertex(viewportMinX, viewportMaxY, 0, 1)};
+	vertex boundlist[4] = {vertex(viewportMinX, viewportMinY, 0.0, 1.0), vertex(viewportMaxX, viewportMinY, 0.0, 1.0), 
+				vertex(viewportMaxX, viewportMaxY, 0.0, 1.0), vertex(viewportMinX, viewportMaxY, 0.0, 1.0)};
 	vertex *boundtmp;
 	boundtmp = &boundlist[0];
 
@@ -52,11 +59,10 @@ void display( void )
 	
 	PipeLine(tmp, vertCount);		//apply transformations	 
 	
-	//***Construction Zone : CATION***
 	clipPolygon(tmp, vertCount, boundtmp, 4);		//clip polygon by viewport boundaries
-	//***
 
 	vector<vertex> drawlist;
+	drawlist.clear();
 	int ind = 0;
 	while(templist[ind].w == 1)
 	{
@@ -95,7 +101,6 @@ void PipeLine(vertex *vp, int vc)	//vp - pointer to temp array; vc - number of v
 	float *tm;
 	tm = &transformMatrix[0];
 
-	//Apply Scalar
 	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
 	applyTransformation( vp, vc, tm );
 
