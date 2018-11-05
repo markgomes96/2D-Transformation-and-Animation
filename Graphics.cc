@@ -50,29 +50,10 @@ void Graphics :: drawOutline(vector<vertex> vl, color c)		//Draw outline of poly
 	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
 	
 	glBegin ( GL_LINE_LOOP );
-		/*
-		for (int i = 0; i < vc; i++)
-		{
-			glVertex2f( (vl+i) -> x, (vl+i) -> y );
-		}
-		*/
 		vector<vertex>::iterator it;
   		for(it = vl.begin(); it != vl.end(); it++)
 		{
-			glVertex2i ( it -> x , it -> y );
-		}
-	glEnd();
-}
-
-void Graphics :: drawPolygon(vector<vertex> vl, color c)		//Draw filled polygon from list of points
-{
-	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
-	
-	glBegin ( GL_POLYGON );
-  		vector<vertex>::iterator it;
-  		for(it = vl.begin(); it != vl.end(); it++)
-		{
-			glVertex2i ( it -> x , it -> y );
+			glVertex2f ( it -> x , it -> y );
 		}
 	glEnd();
 }
@@ -88,13 +69,21 @@ void Graphics :: drawTessPolygon(vector<triangle> tl, color c)
 			glVertex2f ( it -> v1.x, it -> v1.y );
 			glVertex2f ( it -> v2.x, it -> v2.y );	
         		glVertex2f ( it -> v3.x, it -> v3.y );	
-			/*
-			cout << "( " << it -> v1.x << " , " << it -> v1.y  << " )" << "	";
-			cout << "( " << it -> v2.x << " , " << it -> v1.y  << " )" << "	";
-			cout << "( " << it -> v3.x << " , " << it -> v1.y  << " )" << "	";
-			cout << endl;
-			*/
 		glEnd();
 	}
 }
 
+void Graphics :: drawTessTriangle(vector<triangle> tl, color c)
+{
+	glColor3f (c.red, c.green, c.blue);			//change color to prefered color
+	
+	vector<triangle>::iterator it;
+	for(it = trianglelist.begin(); it != trianglelist.end(); ++it)
+	{
+		glBegin ( GL_LINE_LOOP );
+			glVertex2f ( it -> v1.x, it -> v1.y );
+			glVertex2f ( it -> v2.x, it -> v2.y );	
+        		glVertex2f ( it -> v3.x, it -> v3.y );	
+		glEnd();
+	}
+}

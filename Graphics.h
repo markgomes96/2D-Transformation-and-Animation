@@ -12,9 +12,9 @@ class Graphics
 	
 	static void drawCenterPoint(vertex v, color c);
 	static void drawOutline( vector<vertex> vl, color c );
-	static void drawPolygon( vector<vertex> vl, color c );
-	static void drawTessPolygon( vector<triangle> tl, color c);
-	
+	static void drawTessPolygon(vector<triangle> tl, color c);
+	static void drawTessTriangle(vector<triangle> tl, color c);
+
      private:
 };
 

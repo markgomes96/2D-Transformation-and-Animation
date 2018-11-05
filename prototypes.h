@@ -21,7 +21,7 @@ vertex getLineIntersection( vertex , vertex , vertex , vertex );
 bool pointWithinLineBounds( vertex , vertex , vertex );
 
 
-void tessellate( void );		//tessellate.cc
+void tessellate( vertex*, int );		//tessellate.cc
 int sign( int );
 bool sharePoint( vertex , vertex );
 double vectorAngle( vertex , vertex , vertex );

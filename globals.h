@@ -17,6 +17,7 @@ extern int reflection;
 extern DisplayState displayState;
 extern AnimState animState;
 
+extern vertex startcp;
 extern vertex cp;
 
 extern float viewportMinX;

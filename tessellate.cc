@@ -4,30 +4,20 @@
 #include "structs.h"
 #include "prototypes.h"
 
-void tessellate(void)
+void tessellate(vertex *dl, int dc)
 {
-	int vertCount = vertexlist.size();
+	int vertCount = dc;
 	int pi = 0;
 
-	vertex tempList[vertCount];			//array to implement ear clipping algorithm
-	vertex intTempList[vertCount+1];		//array to check for intersection
+	vertex tempList[dc];			//array to implement ear clipping algorithm
+	vertex intTempList[dc+1];		//array to check for intersection
 
-	vector<vertex>::iterator it;
-	int index = 0;
-	for(it = vertexlist.begin(); it != vertexlist.end(); ++it)	//copy vertex points over to temp arrays
+	for(int i = 0; i < dc; i++)		//copy draw array over to temp arrays
 	{
-		tempList[index] = *it;
-		intTempList[index] = *it;
-		index++;
+		tempList[i] = *(dl+i);
+		intTempList[i] = *(dl+i);
 	}
-	intTempList[index] = vertexlist.front();
-
-	/*
-	for(int i = 0; i < vertCount; i++)
-	{
-		cout << i << ":  ( " << tempList[i].x << " , " << tempList[i].y  << " )" << endl;
-	}
-	*/
+	intTempList[dc] = *(dl);
 
 	//Earclipping algorithm
 	vertex fp, mp, ep;				//first point, midpoint, endpoint
@@ -45,8 +35,8 @@ void tessellate(void)
         	v2 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);
        		cp = crossProduct(v1, v2);
 
-		//check if current 3 points are going in initial polygon direction
-        	if(cp.z > 0)
+		//check if current 3 points are CCW
+        	if(cp.z < 0)
         	{
 			//flag to check if line cuases an intersections
 			intersectFlag = false;
@@ -64,7 +54,8 @@ void tessellate(void)
 					break;
 				}
 			}
-	
+		
+			//***Check if it works***//
 			/*
 			if(!intersectFlag)		//check if interior angle is smaller than anterior angle
 			{
@@ -86,11 +77,6 @@ void tessellate(void)
 			{
 				//add triangle to triangle list
                 		trianglelist.push_back(triangle(fp, mp, ep));
-				/*
-				cout << "fp : ( " << fp.x << " , " << fp.y  << " )" << "	";
-				cout << "mp : ( " << mp.x << " , " << mp.y  << " )" << "	";
-				cout << "ep : ( " << ep.x << " , " << ep.y  << " )" << endl;
-				*/
 
                 		//remove the midpoint
 				vertCount--;
@@ -116,7 +102,7 @@ void tessellate(void)
 			//remove the midpoint
 			vertCount--;
 
-			//move up all points that aren't null
+			//move up all points that aren't null		///***Check if this works***///
 			for(int i = pi+1; i < vertCount+1; i++)
 			{
 				tempList[i] = tempList[i+1];
@@ -128,20 +114,10 @@ void tessellate(void)
             		//move to the next set of 3 points 
             		pi++;
         	}
-		
-		/*
-		cout << "------------------------------------------------------------------------------------------" << endl;
-		for(int i = 0; i < vertexlist.size(); i++)
-		{	
-			cout << i << ":  ( " << tempList[i].x << " , " << tempList[i].y  << " )" << endl;
-		}
-		cout << "------------------------------------------------------------------------------------------" << endl;
-		*/
 	}
 
 	//Add last 3 vertices
 	trianglelist.push_back(triangle(tempList[0], tempList[1], tempList[2]));
-	//trianglelist[trianglelist.size()-1] = triangle(tempList[0], tempList[1], tempList[2]);
 }
 
 int sign(int num)
@@ -162,7 +138,7 @@ bool sharePoint(vertex p1, vertex p2)		//determines if two points are the same
         return false;
 }
 
-double vectorAngle(vertex fp, vertex mp, vertex ep)
+double vectorAngle(vertex fp, vertex mp, vertex ep)		//***Check if it works***//
 {
 	//find the angle of two vectors sharing middle point
 	vector3D v1 = vector3D( (mp.x - fp.x), (mp.y - fp.y), 0);
@@ -172,7 +148,7 @@ double vectorAngle(vertex fp, vertex mp, vertex ep)
 	return va;
 }   
 
-bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
+bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)		//***Check if it works***//
 {
 	float ADet = 0;
 	float tADet = 0;

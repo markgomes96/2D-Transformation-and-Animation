@@ -12,16 +12,13 @@ using namespace std;
 
 void Shape :: defineBasePoints(void)
 {
-	int xtrans = 100;
-	int ytrans = 0;
+	vertexlist.push_back(vertex(200, 425, 0, 1.0));		//add in base of tree, goes CCW
+	vertexlist.push_back(vertex(700, 475, 0, 1.0));    
 
-	vertexlist.push_back(vertex(200 + xtrans, 425 + ytrans, 0, 1.0));		//add in base of tree, goes CW
-	vertexlist.push_back(vertex(700 + xtrans, 475 + ytrans, 0, 1.0));    
+	createCircle(150, 650, 500);    //add in circle top of tree
 
-	createCircle(150, 650 + xtrans, 500 + ytrans);    //add in circle top of tree
-
-	vertexlist.push_back(vertex(700 + xtrans, 525 + ytrans, 0, 1.0));
-	vertexlist.push_back(vertex(200 + xtrans, 575 + ytrans, 0, 1.0));	
+	vertexlist.push_back(vertex(700, 525, 0, 1.0));
+	vertexlist.push_back(vertex(200, 575, 0, 1.0));	
 }
 
 void Shape :: createCircle(int radius, int cx, int cy)

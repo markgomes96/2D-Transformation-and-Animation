@@ -18,17 +18,11 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 	vector3D cpvect;
 	bool insideBounds = false;
 	bool isColinear = false;
-	boundtracker boundtrack = boundtracker(false, -1);
 	vertex intpoint;
 	vector<vertex> inputlist;
 	vector<vertex> outputlist;
 	inputlist.clear();
 	outputlist.clear();
-
-	/***
-	*Make input list out of clipvertex -> (float x, y, z, w, bool isIntVert, intOut, boundIndex) 
-	*Remove other stuff
-	***/	
 
 	for(int i = 0; i < vc; i++)		//move vp over to input list
 	{
@@ -83,33 +77,24 @@ void clipPolygon(vertex *vp, int vc, vertex *bp, int bpc)
 				{
 					if(insideBounds == false)	//going outside -> inside
 					{
-						if(boundtrack.wentOutside == true && boundtrack.boundIndex != i)
-						{
-							//*atempt cyclical thing for i = 0?
-							outputlist.push_back(vertex((bp+(boundtrack.boundIndex)+1) -> x, 
-								(bp+(boundtrack.boundIndex)+1) -> y, (bp+(boundtrack.boundIndex)+1) -> z, 1));
-							boundtrack = boundtracker(false, -1);
-						}
-
 						outputlist.push_back(intpoint);		//add boundary intercept
 					}
 					else				//going inside -> outside
 					{
 						outputlist.push_back(polystart);		//add inside point / boundary intercept
 						outputlist.push_back(intpoint);
-
-						boundtrack = boundtracker(true, i);
 					}
 				}
 				else 
 				{
-					if(insideBounds == false)
+					if(insideBounds == false)	//completly outside / outside boundary
 					{
 						//don't add any vertices
 					}
-					else
+					else				//completly outside / inside boundary
 					{
 						outputlist.push_back(polystart);		//add startpoint
+						//cout << "completly outside / inside boundary" << endl;
 					}
 					
 				}
@@ -231,9 +216,9 @@ vertex getLineIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 
 bool pointWithinLineBounds(vertex p, vertex lstart, vertex lend)
 {
-	if(p.x > min(lstart.x, lend.x) && p.x < max(lstart.x, lend.x))
+	if(p.x >= min(lstart.x, lend.x) && p.x <= max(lstart.x, lend.x))
 	{
-		if(p.y > min(lstart.y, lend.y) && p.y < max(lstart.y, lend.y))
+		if(p.y >= min(lstart.y, lend.y) && p.y <= max(lstart.y, lend.y))
 		{
 			return true;		//point is within line bounds
 		}

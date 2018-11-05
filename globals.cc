@@ -17,7 +17,8 @@ int reflection = 1;				//reflection
 DisplayState displayState = outline;		//states
 AnimState animState = playanim;
 
-vertex cp = vertex(WINDOW_MAX_X/2, WINDOW_MAX_Y/2, 0, 1);		//center point
+vertex startcp = vertex(WINDOW_MAX_X/2, WINDOW_MAX_Y/2, 0, 1);		//starting center point
+vertex cp = vertex(WINDOW_MAX_X/2, WINDOW_MAX_Y/2, 0, 1);		//current center point
 
 float viewportMinX = 0.0;		//resize boundary
 float viewportMaxX = 0.0;

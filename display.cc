@@ -72,6 +72,18 @@ void display( void )
 			break;
 	}
 
+	int dc = drawlist.size();
+	vertex drawarray[dc];			//create temp array of drawlist
+	vertex *dp;					//pointer to draw array
+	dp = &drawarray[0];
+	for(int i = 0; i < dc; i++)
+	{
+		drawarray[i].x = drawlist[i].x;
+		drawarray[i].y = drawlist[i].y;
+		drawarray[i].z = drawlist[i].z;
+		drawarray[i].w = drawlist[i].w;
+	}
+
 	switch(displayState)		//display the transformed points
 	{
 		case outline : 
@@ -79,17 +91,16 @@ void display( void )
 			break;
 
     		case tessfill :
-			Graphics::drawOutline(drawlist, color(0.0, 1.0, 0.0)); 
-			//tessellate();
-			//Graphics::drawTessPolygon(trianglelist, color(0.0, 1.0, 0.0));  
+			tessellate(dp, dc);
+			Graphics::drawTessPolygon(trianglelist, color(0.0, 1.0, 0.0));  
 			break;
 
-    		case tesstriangle : 
-			Graphics::drawOutline(drawlist, color(0.0, 0.0, 1.0)); 
-			//tessellate();
-			//Graphics::drawTessTriangle(trianglelist, color(0.0, 1.0, 0.0)); 
+    		case tesstriangle :  
+			tessellate(dp, dc);
+			Graphics::drawTessTriangle(trianglelist, color(0.0, 1.0, 0.0)); 
 			break;
 	}
+	trianglelist.clear();
 
 	glutSwapBuffers(); 				//swap buffers to draw new frame
 }
@@ -100,6 +111,9 @@ void PipeLine(vertex *vp, int vc)	//vp - pointer to temp array; vc - number of v
 	float transformMatrix[16];		//set up the tranformation matrix and pointer
 	float *tm;
 	tm = &transformMatrix[0];
+
+	buildTranslate( cp.x - startcp.x, cp.y - startcp.y, 0.0, tm);	//translate to new rotation point 
+	applyTransformation( vp, vc, tm );
 
 	buildTranslate( -cp.x, -cp.y, 0.0, tm);		//translate to origin 
 	applyTransformation( vp, vc, tm );
