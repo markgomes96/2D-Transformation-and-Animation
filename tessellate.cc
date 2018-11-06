@@ -31,8 +31,8 @@ void tessellate(vertex *dl, int dc)
 		ep = tempList[pi+2];
 
         	//check the cross product to see if points go counter clockwise
-        	v1 = vector3D((mp.x - fp.x), (mp.y - fp.y), 0);
-        	v2 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);
+		v1 = vector3D((fp.x - mp.x), (fp.y - mp.y), 0);
+		v2 = vector3D((ep.x - mp.x), (ep.y - mp.y), 0);
        		cp = crossProduct(v1, v2);
 
 		//check if current 3 points are CCW
@@ -41,7 +41,7 @@ void tessellate(vertex *dl, int dc)
 			//flag to check if line cuases an intersections
 			intersectFlag = false;
 			
-			for(int i = 0; i < vertCount; i++)
+			for(int i = 0; i < dc+1; i++)		//check intersection for line between ep -> fp with all lines
 			{
 				//makes sure lines with same points aren't tested for intersection
                 		if(sharePoint(ep, intTempList[i]) || sharePoint(ep, intTempList[i+1]) || sharePoint(fp, intTempList[i]) || sharePoint(fp, intTempList[i+1]))
@@ -51,26 +51,21 @@ void tessellate(vertex *dl, int dc)
 				else if(checkIntersection(intTempList[i], intTempList[i+1], ep, fp))	//checks if interior line intersects anterior lines
 				{
 					intersectFlag = true;
-					break;
+					//break;
 				}
 			}
 		
 			//***Check if it works***//
-			/*
-			if(!intersectFlag)		//check if interior angle is smaller than anterior angle
-			{
-				v1 = vector3D((ep.x - mp.x), (ep.y - mp.y), 0);
-				v2 = vector3D((ep.x - intTempList[pi+3].x), (ep.y - intTempList[pi+3].y), 0);
+			v1 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);					//check if interior angle is smaller than anterior angle
+			v2 = vector3D((intTempList[pi+3].x - ep.x), (intTempList[pi+3].y - ep.y), 0);
 
-				if(sign(crossProduct(v1, v2).z) == 1)			//check if next two lines are CCW
+			if(crossProduct(v1, v2).z < 0)			//check if next two lines are CCW
+			{
+				if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, intTempList[pi+3]))		//check if line is an interior line
 				{
-					if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, intTempList[pi+3]))		//check if line is an interior line
-					{
-						intersectFlag = true;
-					}
+					intersectFlag = true;
 				}
 			}
-			*/
 
 			//check if the lines intersect
 			if(!intersectFlag)
@@ -108,6 +103,9 @@ void tessellate(vertex *dl, int dc)
 				tempList[i] = tempList[i+1];
 			}
 			tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+
+			//return to first 3 points
+			pi = 0;
         	}
         	else
         	{
@@ -138,13 +136,14 @@ bool sharePoint(vertex p1, vertex p2)		//determines if two points are the same
         return false;
 }
 
-double vectorAngle(vertex fp, vertex mp, vertex ep)		//***Check if it works***//
+float vectorAngle(vertex fp, vertex mp, vertex ep)		//***Check if it works***//
 {
 	//find the angle of two vectors sharing middle point
-	vector3D v1 = vector3D( (mp.x - fp.x), (mp.y - fp.y), 0);
-	vector3D v2 = vector3D( (mp.x - ep.x), (mp.y - ep.y), 0);
+	vector3D v1 = vector3D( (fp.x - mp.x), (fp.y - mp.y), 0);
+	vector3D v2 = vector3D( (ep.x - mp.x), (ep.y - mp.y), 0);
 
-	double va = acos( ((double)(dotProduct(v1, v2))) / (vectorMagnitude(v1) * vectorMagnitude(v2)) );
+	float va = acos( (double)dotProduct(v1, v2) / ( vectorMagnitude(v1) * vectorMagnitude(v2) ) );
+	va = (va * 180) / M_PI;
 	return va;
 }   
 
@@ -189,18 +188,18 @@ bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)		//***Check i
 	}
 }
 
-int dotProduct(vector3D v1, vector3D v2)
+float dotProduct(vector3D v1, vector3D v2)
 {
-	int dp;
+	float dp;
 	dp = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 
 	return dp;
 }
 
-double vectorMagnitude(vector3D v1)
+float vectorMagnitude(vector3D v1)
 {
-    double vm;
-    vm  = sqrt((v1.x * v1.x) + (v1.y * v1.y));
+    float vm;
+    vm  = sqrt((v1.x * v1.x) + (v1.y * v1.y) + (v1.z * v1.z));
     return vm;
 }
 

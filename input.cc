@@ -16,7 +16,7 @@ void mouse( int button, int state, int x, int y )
 				{
 					if(deltaspin > -10.0)		//max CCW spin at 10 degrees per iteration
 					{
-						deltaspin = deltaspin - 1.0;	//increase rotation in CCW
+						deltaspin = deltaspin - 0.1;	//increase rotation in CCW
 		        			glutIdleFunc(spinDisplay);
 					}
 					animState = playanim;
@@ -36,7 +36,7 @@ void mouse( int button, int state, int x, int y )
 				{
 					if(deltaspin < 10.0)		//max CW spin at 10 degrees per iteration
 					{
-						deltaspin = deltaspin + 1.0;	//increase rotation CW
+						deltaspin = deltaspin + 0.1;	//increase rotation CW
 		        			glutIdleFunc(spinDisplay);
 					}
 					animState = playanim;

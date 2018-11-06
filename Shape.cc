@@ -35,24 +35,27 @@ void Shape :: createCircle(int radius, int cx, int cy)
 
 	while(y > x)
 	{
-	if(d <= 0)
-	{
-	d += x * 2.0 + 3;
-	x++;
-	}
-	else
-	{
-	d += (x - y) * 2.0 + 5.0;
-	x++;
-	y--;
-	}
+		if(d <= 0)
+		{
+			d += x * 2.0 + 3;
+			//x++;
+			x = x + 15;
+		}
+		else
+		{
+			d += (x - y) * 2.0 + 5.0;
+			//x++;
+			//y--;
+			x = x + 15;
+			y = y - 15;
+		}
 
-	quad1.push_back(vertex( (-x) + cx,   y  + cy, 0, 1.0));    //reflect point along circle symmetries
-	quad2.push_back(vertex(   x  + cx,   y  + cy, 0, 1.0));        //convert to world coordinates
-	quad3.push_back(vertex(   y  + cx,   x  + cy, 0, 1.0));
-	quad4.push_back(vertex(   y  + cx, (-x) + cy, 0, 1.0));
-	quad5.push_back(vertex(   x  + cx, (-y) + cy, 0, 1.0));
-	quad6.push_back(vertex( (-x) + cx, (-y) + cy, 0, 1.0));
+		quad1.push_back(vertex( (-x) + cx,   y  + cy, 0, 1.0));    //reflect point along circle symmetries
+		quad2.push_back(vertex(   x  + cx,   y  + cy, 0, 1.0));        //convert to world coordinates
+		quad3.push_back(vertex(   y  + cx,   x  + cy, 0, 1.0));
+		quad4.push_back(vertex(   y  + cx, (-x) + cy, 0, 1.0));
+		quad5.push_back(vertex(   x  + cx, (-y) + cy, 0, 1.0));
+		quad6.push_back(vertex( (-x) + cx, (-y) + cy, 0, 1.0));
 	}
 
 	reverse(quad6.begin(), quad6.end());					//insert each segment in right order

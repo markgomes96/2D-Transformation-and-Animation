@@ -24,10 +24,10 @@ bool pointWithinLineBounds( vertex , vertex , vertex );
 void tessellate( vertex*, int );		//tessellate.cc
 int sign( int );
 bool sharePoint( vertex , vertex );
-double vectorAngle( vertex , vertex , vertex );
+float vectorAngle( vertex , vertex , vertex );
 bool checkIntersection( vertex , vertex , vertex , vertex );
-int dotProduct( vector3D , vector3D );
-double vectorMagnitude( vector3D );
+float dotProduct( vector3D , vector3D );
+float vectorMagnitude( vector3D );
 vector3D crossProduct( vector3D , vector3D );
 
 int main( int , char** );			//main.cc
