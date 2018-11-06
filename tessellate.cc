@@ -77,11 +77,11 @@ void tessellate(vertex *dl, int dc)
 				vertCount--;
 	
                 		//move up all the points that aren't null
-                		for(int i = pi+1; i < vertCount+1; i++)
+                		for(int i = pi+1; i < vertCount; i++)
                 		{
                     			tempList[i] = tempList[i+1];
                 		}
-				tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+				//tempList[vertCount] = vertex(30.0, 0.0, 0.0, 0.0);
 
 				//return to first 3 points
 				pi = 0;
@@ -98,11 +98,11 @@ void tessellate(vertex *dl, int dc)
 			vertCount--;
 
 			//move up all points that aren't null		///***Check if this works***///
-			for(int i = pi+1; i < vertCount+1; i++)
+			for(int i = pi+1; i < vertCount; i++)
 			{
 				tempList[i] = tempList[i+1];
 			}
-			tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+			//tempList[vertCount] = vertex(40.0, 0.0, 0.0, 0.0);
 
 			//return to first 3 points
 			pi = 0;
@@ -116,6 +116,13 @@ void tessellate(vertex *dl, int dc)
 
 	//Add last 3 vertices
 	trianglelist.push_back(triangle(tempList[0], tempList[1], tempList[2]));
+	
+	/*
+	for(int i = 0; i < dc; i++)
+	{	
+		cout << i << " : ( " << tempList[i].x << " , " << tempList[i].y << " )" << endl << endl;
+	}
+	*/
 }
 
 int sign(int num)

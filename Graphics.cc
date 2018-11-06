@@ -84,6 +84,10 @@ void Graphics :: drawTessTriangle(vector<triangle> tl, color c)
 			glVertex2f ( it -> v1.x, it -> v1.y );
 			glVertex2f ( it -> v2.x, it -> v2.y );	
         		glVertex2f ( it -> v3.x, it -> v3.y );	
+			cout << "( " << it -> v1.x << " , " << it -> v1.y << " )" << endl;
+			cout << "( " << it -> v2.x << " , " << it -> v2.y << " )" << endl;
+			cout << "( " << it -> v3.x << " , " << it -> v3.y << " )" << endl;
+			cout << endl;
 		glEnd();
 	}
 }
