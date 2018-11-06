@@ -16,6 +16,7 @@ void tessellate(vertex *dl, int dc)
 	{
 		tempList[i] = *(dl+i);
 		intTempList[i] = *(dl+i);
+		//cout << "( " << (dl+i) -> x << " , " << (dl+i) -> y << " ) " << endl;
 	}
 	intTempList[dc] = *(dl);
 
@@ -51,19 +52,22 @@ void tessellate(vertex *dl, int dc)
 				else if(checkIntersection(intTempList[i], intTempList[i+1], ep, fp))	//checks if interior line intersects anterior lines
 				{
 					intersectFlag = true;
-					//break;
+					break;
 				}
 			}
 		
-			//***Check if it works***//
-			v1 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);					//check if interior angle is smaller than anterior angle
-			v2 = vector3D((intTempList[pi+3].x - ep.x), (intTempList[pi+3].y - ep.y), 0);
-
-			if(crossProduct(v1, v2).z < 0)			//check if next two lines are CCW
+			if(!intersectFlag)
 			{
-				if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, intTempList[pi+3]))		//check if line is an interior line
+				//***Check if it works***//
+				v1 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);					//check if interior angle is smaller than anterior angle
+				v2 = vector3D((tempList[pi+3].x - ep.x), (tempList[pi+3].y - ep.y), 0);
+
+				if(crossProduct(v1, v2).z < 0)			//check if next two lines are CCW
 				{
-					intersectFlag = true;
+					if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, tempList[pi+3]))		//check if line is an interior line
+					{
+						intersectFlag = true;
+					}
 				}
 			}
 
@@ -81,7 +85,7 @@ void tessellate(vertex *dl, int dc)
                 		{
                     			tempList[i] = tempList[i+1];
                 		}
-				//tempList[vertCount] = vertex(30.0, 0.0, 0.0, 0.0);
+				tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
 
 				//return to first 3 points
 				pi = 0;
@@ -94,15 +98,16 @@ void tessellate(vertex *dl, int dc)
         	}
         	else if(cp.z == 0)
         	{
+			//cout << "( " << fp.x << " , " << fp.y << " )  ("<< mp.x << " , " << mp.y << " )  ( " << ep.x << " , " << ep.y << " )" << endl;
 			//remove the midpoint
 			vertCount--;
 
-			//move up all points that aren't null		///***Check if this works***///
+			//move up all points that aren't null
 			for(int i = pi+1; i < vertCount; i++)
 			{
 				tempList[i] = tempList[i+1];
 			}
-			//tempList[vertCount] = vertex(40.0, 0.0, 0.0, 0.0);
+			tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
 
 			//return to first 3 points
 			pi = 0;
@@ -112,6 +117,10 @@ void tessellate(vertex *dl, int dc)
             		//move to the next set of 3 points 
             		pi++;
         	}
+
+		for(int i = 0; i < dc; i++)
+			cout << "( " << tempList[i].x << " , " << tempList[i].y << " )" << endl;
+		cout << "****************" << endl << endl;
 	}
 
 	//Add last 3 vertices

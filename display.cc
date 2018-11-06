@@ -35,6 +35,8 @@ void display( void )
 	vertex *boundtmp;
 	boundtmp = &boundlist[0];
 
+	//cout << "vertexlist size : " << vertexlist.size() << endl;
+
 	vector<vertex>::iterator it;
 	int index = 0;
 	for(it = vertexlist.begin(); it != vertexlist.end(); ++it)	//copy vertex points over to a temp array
@@ -46,6 +48,8 @@ void display( void )
 		index++;
 	}
 	
+	//cout << "templist size : " << index << endl;
+
 	if(animState == resetanim)	//reset transformation variables to default
 	{ 
 		deltaspin = 0.0;		
@@ -69,6 +73,8 @@ void display( void )
 		if(ind == (vertCount*2))
 			break;
 	}
+
+	//cout << "drawlist size: " << drawlist.size() << endl;
 
 	int dc = drawlist.size();
 	vertex drawarray[dc];			//create temp array of drawlist
