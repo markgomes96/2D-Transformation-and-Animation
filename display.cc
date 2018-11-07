@@ -59,6 +59,8 @@ void display( void )
 		animState = playanim;
 	}
 	
+	//spin = -130;
+
 	PipeLine(tmp, vertCount);		//apply transformations	 
 	
 	clipPolygon(tmp, vertCount, boundtmp, 4);		//clip polygon by viewport boundaries

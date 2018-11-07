@@ -3,9 +3,11 @@
 #include "globals.h"
 #include "structs.h"
 #include "prototypes.h"
+#include "Graphics.h"
 
 void tessellate(vertex *dl, int dc)
 {
+	int colinearCounter = 0;
 	int vertCount = dc;
 	int pi = 0;
 
@@ -16,8 +18,9 @@ void tessellate(vertex *dl, int dc)
 	{
 		tempList[i] = *(dl+i);
 		intTempList[i] = *(dl+i);
-		//cout << "( " << (dl+i) -> x << " , " << (dl+i) -> y << " ) " << endl;
+		cout << "( " << (dl+i) -> x << " , " << (dl+i) -> y << " ) " << endl;		//print all points going in
 	}
+	//tempList[dc] = *(dl);
 	intTempList[dc] = *(dl);
 
 	//Earclipping algorithm
@@ -36,12 +39,24 @@ void tessellate(vertex *dl, int dc)
 		v2 = vector3D((ep.x - mp.x), (ep.y - mp.y), 0);
        		cp = crossProduct(v1, v2);
 
+		if(cp.z == 0.0)
+		{
+			Graphics::drawCenterPoint(fp, color(1.0, 0.0, 0.0));
+			Graphics::drawCenterPoint(ep, color(0.0, 0.0, 1.0));
+			Graphics::drawCenterPoint(mp, color(0.0, 0.0, 0.0));
+
+			cout << "fp : ( " << fp.x << " , " << fp.y << " , " << fp.z << " , " << fp.w << " ) " << endl;
+			cout << "mp : ( " << mp.x << " , " << mp.y << " , " << mp.z << " , " << mp.w << " ) " << endl;
+			cout << "ep : ( " << ep.x << " , " << ep.y << " , " << ep.z << " , " << ep.w << " ) " << endl << endl;
+
+			cout << "v1 : < " << v1.x << " , " << v1.y << " , " << v1.z << " > " << endl;
+			cout << "v2 : < " << v2.x << " , " << v2.y << " , " << v2.z << " > " << endl << endl;
+		}
+
+		intersectFlag = false;				//flag to check if line cuases an intersections
 		//check if current 3 points are CCW
-        	if(cp.z < 0)
+        	if(cp.z < 0.0)
         	{
-			//flag to check if line cuases an intersections
-			intersectFlag = false;
-			
 			for(int i = 0; i < dc+1; i++)		//check intersection for line between ep -> fp with all lines
 			{
 				//makes sure lines with same points aren't tested for intersection
@@ -58,7 +73,6 @@ void tessellate(vertex *dl, int dc)
 		
 			if(!intersectFlag)
 			{
-				//***Check if it works***//
 				v1 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0);					//check if interior angle is smaller than anterior angle
 				v2 = vector3D((tempList[pi+3].x - ep.x), (tempList[pi+3].y - ep.y), 0);
 
@@ -83,20 +97,31 @@ void tessellate(vertex *dl, int dc)
                 		//move up all the points that aren't null
                 		for(int i = pi+1; i < vertCount; i++)
                 		{
-                    			tempList[i] = tempList[i+1];
+                    			//tempList[i] = tempList[i+1];
+					tempList[i].x = tempList[i+1].x;
+					tempList[i].y = tempList[i+1].y;
+					tempList[i].z = tempList[i+1].z;
+					tempList[i].w = tempList[i+1].w;
                 		}
-				tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+				//tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+				tempList[vertCount].x = 0.0;
+				tempList[vertCount].y = 0.0;
+				tempList[vertCount].z = 0.0;
+				tempList[vertCount].w = 0.0;
 
 				//return to first 3 points
 				pi = 0;
+
+				cout << "***points were VALID***" << endl << endl;
 			}
 			else
 			{
 				//move to the next set of 3 points
 				pi++;
+				cout << "***points were NOT VALID***" << endl << endl;
 			}
         	}
-        	else if(cp.z == 0)
+        	else if(cp.z == 0.0)
         	{
 			//cout << "( " << fp.x << " , " << fp.y << " )  ("<< mp.x << " , " << mp.y << " )  ( " << ep.x << " , " << ep.y << " )" << endl;
 			//remove the midpoint
@@ -105,21 +130,32 @@ void tessellate(vertex *dl, int dc)
 			//move up all points that aren't null
 			for(int i = pi+1; i < vertCount; i++)
 			{
-				tempList[i] = tempList[i+1];
+				//tempList[i] = tempList[i+1];
+				tempList[i].x = tempList[i+1].x;
+				tempList[i].y = tempList[i+1].y;
+				tempList[i].z = tempList[i+1].z;
+				tempList[i].w = tempList[i+1].w;
 			}
-			tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+			//tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
+			tempList[vertCount].x = 0.0;
+			tempList[vertCount].y = 0.0;
+			tempList[vertCount].z = 0.0;
+			tempList[vertCount].w = 0.0;
 
 			//return to first 3 points
 			pi = 0;
+			colinearCounter++;
+			cout << "***points were COLINEAR***" << endl << endl;
         	}
         	else
         	{
             		//move to the next set of 3 points 
-            		pi++;
+			pi++;
+			cout << "***points were CW***" << endl << endl;
         	}
 
 		for(int i = 0; i < dc; i++)
-			cout << "( " << tempList[i].x << " , " << tempList[i].y << " )" << endl;
+			cout << "( " << tempList[i].x << " , " << tempList[i].y << " )" << endl;	//print templist
 		cout << "****************" << endl << endl;
 	}
 
@@ -132,16 +168,7 @@ void tessellate(vertex *dl, int dc)
 		cout << i << " : ( " << tempList[i].x << " , " << tempList[i].y << " )" << endl << endl;
 	}
 	*/
-}
-
-int sign(int num)
-{
-	if(num > 0)
-		return 1;
-	else if (num < 0)
-		return -1;
-	else
-		return 0;
+	cout << "****colinearCounter: " << colinearCounter << " ****" << endl << endl;
 }
 
 bool sharePoint(vertex p1, vertex p2)		//determines if two points are the same
@@ -165,11 +192,11 @@ float vectorAngle(vertex fp, vertex mp, vertex ep)		//***Check if it works***//
 
 bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)		//***Check if it works***//
 {
-	float ADet = 0;
-	float tADet = 0;
-	float tBDet = 0;
-	float tA = 0;
-	float tB = 0;
+	float ADet = 0.0;
+	float tADet = 0.0;
+	float tBDet = 0.0;
+	float tA = 0.0;
+	float tB = 0.0;
 
 	ADet = (float)( (p2.x - p1.x) * (-(p4.y - p3.y)) ) - ( (p2.y - p1.y) * (-(p4.x - p3.x)) );
 	if(ADet == 0)		//Check if lines are parallel
@@ -194,7 +221,7 @@ bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)		//***Check i
 	tA = (float)tADet / (float)ADet;
 	tB = (float)tBDet / (float)ADet;
 
-	if( (tA >= 0 && tA <= 1) && (tB >= 0 && tB <= 1) )
+	if( (tA >= 0.0 && tA <= 1.0) && (tB >= 0.0 && tB <= 1.0) )
 	{
 		return true;
 	}

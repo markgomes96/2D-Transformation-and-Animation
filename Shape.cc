@@ -47,15 +47,15 @@ void Shape :: createCircle(int radius, int cx, int cy)
 		{
 			d += x * 2.0 + 3;
 			//x++;
-			x = x + 15;
+			x = x + 25;
 		}
 		else
 		{
 			d += (x - y) * 2.0 + 5.0;
 			//x++;
 			//y--;
-			x = x + 15;
-			y = y - 15;
+			x = x + 25;
+			y = y - 25;
 		}
 
 		quad1.push_back(vertex( (-x) + cx,   y  + cy, 0, 1.0));    //reflect point along circle symmetries
