@@ -23,7 +23,9 @@ bool pointWithinLineBounds( vertex , vertex , vertex );
 
 void tessellate( vertex*, int );		//tessellate.cc
 bool isSamePoint( vertex , vertex );
+bool isLineOnBounds( vertex , vertex );
 float vectorAngle( vertex , vertex , vertex );
+bool checkIntersection( vertex , vertex , vertex , vertex );
 bool pointWithinBounds(vertex , vertex , vertex , vertex );
 float dotProduct( vector3D , vector3D );
 float vectorMagnitude( vector3D );

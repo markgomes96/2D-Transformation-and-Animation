@@ -21,7 +21,9 @@ void Shape :: defineBasePoints(void)
 	vertexlist.push_back(vertex(700, 525, 0, 1.0));
 	vertexlist.push_back(vertex(200, 575, 0, 1.0));
 	*/
-	
+	vertexlist.push_back(vertex(700, 525, 0, 1.0));
+	vertexlist.push_back(vertex(200, 575, 0, 1.0));
+	vertexlist.push_back(vertex(200, 425, 0, 1.0));
 	vertexlist.push_back(vertex(700, 475, 0, 1.0));
 
 	/*
@@ -31,10 +33,6 @@ void Shape :: defineBasePoints(void)
 	*/
 
 	createCircle(150, 650, 500);    //add in circle top of tree
-
-	vertexlist.push_back(vertex(700, 525, 0, 1.0));
-	vertexlist.push_back(vertex(200, 575, 0, 1.0));
-	vertexlist.push_back(vertex(200, 425, 0, 1.0));
 }
 
 void Shape :: createCircle(int radius, int cx, int cy)
@@ -54,16 +52,16 @@ void Shape :: createCircle(int radius, int cx, int cy)
 		if(d <= 0)
 		{
 			d += x * 2.0 + 3;
-			//x++;
-			x = x + 25;
+			x++;
+			//x = x + 25;
 		}
 		else
 		{
 			d += (x - y) * 2.0 + 5.0;
-			//x++;
-			//y--;
-			x = x + 25;
-			y = y - 25;
+			x++;
+			y--;
+			//x = x + 25;
+			//y = y - 25;
 		}
 
 		quad1.push_back(vertex( (-x) + cx,   y  + cy, 0, 1.0));    //reflect point along circle symmetries
