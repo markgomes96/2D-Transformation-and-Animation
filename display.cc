@@ -22,7 +22,7 @@ void display( void )
 	vertex templist[vertCount*2];			//create temp array of current vertexlist
 	vertex *tmp;					//pointer to temp array
 	tmp = &templist[0];
-	for(int i = 0; i < (vertCount*2); i++)
+	for(int i = 0; i < (vertCount*2); i++)		//clear out array
 	{
 		templist[i].x = 0.0;
 		templist[i].y = 0.0;
@@ -68,12 +68,10 @@ void display( void )
 	vector<vertex> drawlist;
 	drawlist.clear();
 	int ind = 0;
-	while(templist[ind].w == 1)
+	while(templist[ind].w == 1.0)
 	{
 		drawlist.push_back(templist[ind]);
 		ind++;
-		if(ind == (vertCount*2))
-			break;
 	}
 
 	//cout << "drawlist size: " << drawlist.size() << endl;
@@ -98,11 +96,13 @@ void display( void )
 
     		case tessfill :
 			tessellate(dp, dc);
-			Graphics::drawTessPolygon(trianglelist, color(0.0, 1.0, 0.0));  
+			//tessellate(tmp, vertCount);
+			Graphics::drawTessPolygon(trianglelist, color(0.0, 0.0, 1.0));  
 			break;
 
     		case tesstriangle :  
 			tessellate(dp, dc);
+			//tessellate(tmp, vertCount);
 			Graphics::drawTessTriangle(trianglelist, color(0.0, 1.0, 0.0)); 
 			break;
 	}
