@@ -59,9 +59,9 @@ void mouse( int button, int state, int x, int y )
 
 bool checkBounds(int x, int y)		//returns true is within bounds
 {
-	if(x > VIEWPORT_MIN_X && x < VIEWPORT_MAX_X)
+	if(x > viewportMinX && x < viewportMaxX)
 	{
-		if(y > VIEWPORT_MIN_Y && y < VIEWPORT_MAX_Y)
+		if(y > viewportMinY && y < viewportMaxY)
 		{
 			return true;
 		}

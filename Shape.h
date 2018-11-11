@@ -7,7 +7,6 @@ using namespace std;
 class Shape 
 {
      public:
-	//Shape();
   
 	static void defineBasePoints(void);
 	static void createCircle(int radius, int cx, int cy);

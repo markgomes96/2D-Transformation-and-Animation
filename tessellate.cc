@@ -26,21 +26,9 @@ void tessellate(vertex *dl, int dc)
 	vertex fp, mp, ep;				//first point, midpoint, endpoint
 	vector3D v1, v2, cp;				//vectors to calculate the crossproduct
 	bool intersectFlag = false;
-	bool methodSwap = false;
 	vertex np;
 	while(vertCount > 3)
 	{
-		if(pi+2 == vertCount)
-		{
-			//pi = 0;
-			/*
-			if(methodSwap)
-				methodSwap = false;
-			else
-				methodSwap = true;
-			*/
-		}
-	
 		//Get next 3 points based on point index
 		fp = tempList[pi];
 		mp = tempList[pi+1];
@@ -52,31 +40,26 @@ void tessellate(vertex *dl, int dc)
 			cout << "( " << tempList[i].x << " , " << tempList[i].y << " )" << endl;	//print templist	
 		*/
 	
-        	//check the cross product to see if points go counter clockwise
+        //check the cross product to see if points go counter clockwise
 		v1 = vector3D((fp.x - mp.x), (fp.y - mp.y), 0.0);
 		v2 = vector3D((ep.x - mp.x), (ep.y - mp.y), 0.0);
-       		cp = crossProduct(v1, v2);
-		
-		//cout << "cp.z : " << cp.z << endl;
+       	cp = crossProduct(v1, v2);
 
 		intersectFlag = false;				//flag to check if line cuases an intersections
 
 		if(abs(cp.z) < 0.0000001)		//check if points are colinear
-        	{
-			//cout << "( " << fp.x << " , " << fp.y << " )  ("<< mp.x << " , " << mp.y << " )  ( " << ep.x << " , " << ep.y << " )" << endl;
+        {
 			//remove the midpoint
 			vertCount--;
 
 			//move up all points that aren't null
 			for(int i = pi+1; i < vertCount; i++)
 			{
-				//tempList[i] = tempList[i+1];
 				tempList[i].x = tempList[i+1].x;
 				tempList[i].y = tempList[i+1].y;
 				tempList[i].z = tempList[i+1].z;
 				tempList[i].w = tempList[i+1].w;
 			}
-			//tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
 			tempList[vertCount].x = 0.0;
 			tempList[vertCount].y = 0.0;
 			tempList[vertCount].z = 0.0;
@@ -86,114 +69,88 @@ void tessellate(vertex *dl, int dc)
 			pi = 0;
 			colinearCounter++;
 			//cout << "***points were COLINEAR***" << endl << endl;
-        	}
-        	else if(cp.z < 0.0)		//check if current 3 points are CCW
-        	{
-			if(methodSwap)
+        }
+        else if(cp.z < 0.0)		//check if current 3 points are CCW
+        {
+			for(int i = 0; i < dc; i++)		//check point intersection 
 			{
-				//cout << "***points were CCW***" << endl << endl;
-				for(int i = 0; i < dc; i++)		//check intersection for line between ep -> fp with all lines
-				{
-					if(isSamePoint(fp, intTempList[i]) || isSamePoint(mp, intTempList[i]) || isSamePoint(ep, intTempList[i]))
+				//makes sure lines with same points aren't tested for intersection
+		        if(!(isSamePoint(ep, intTempList[i]) || isSamePoint(ep, intTempList[i+1]) || isSamePoint(fp, intTempList[i]) || isSamePoint(fp, intTempList[i+1])))
+		       	{
+		     	    if(!isLineOnBounds(intTempList[i], intTempList[i+1]))
 					{
-						//test point is same as one of boundary points
-					}
-					else if(pointWithinBounds(fp, mp, ep, intTempList[i]))
-					{
-						intersectFlag = true;
-						//cout << "Line Intersection : ( " << intTempList[i].x << " , " << intTempList[i].y << " ) " << endl << endl;
-						break;
-					}
-				}
-			}
-			else
-			{
-				for(int i = 0; i < dc; i++)		//check point intersection 
-				{
-					//makes sure lines with same points aren't tested for intersection
-		        		if(!(isSamePoint(ep, intTempList[i]) || isSamePoint(ep, intTempList[i+1]) || isSamePoint(fp, intTempList[i]) || isSamePoint(fp, intTempList[i+1])))
-		       			{
-		     				if(!isLineOnBounds(intTempList[i], intTempList[i+1]))
+					    if(checkIntersection(intTempList[i], intTempList[i+1], fp, ep))
 						{
-							if(checkIntersection(intTempList[i], intTempList[i+1], fp, ep))
-							{
-								//cout << "LINE Intersection" << endl << endl;
-								intersectFlag = true;
-								break;
-							}
+							//cout << "LINE Intersection" << endl << endl;
+							intersectFlag = true;
+							break;
 						}
-		        		}
-				}
+					}
+		        }
 			}
 		
-			if(!intersectFlag)
-			{
-				v1 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0.0);					//check if interior angle is smaller than anterior angle
+		    if(!intersectFlag)
+		    {
+			    v1 = vector3D((mp.x - ep.x), (mp.y - ep.y), 0.0);					//check if interior angle is smaller than anterior angle
 				
-				if(pi+3 < vertCount)			//check if pi is at array end
-					np = tempList[pi+3];
-				else
-					np = tempList[0];
+			    if(pi+3 < vertCount)			//check if pi is at array end
+				    np = tempList[pi+3];
+			    else
+				    np = tempList[0];
 
-				v2 = vector3D((np.x - ep.x), (np.y - ep.y), 0.0);	
+			    v2 = vector3D((np.x - ep.x), (np.y - ep.y), 0.0);	
 
-				//cout << "cross product : " << crossProduct(v1, v2).z << endl << endl;
-				if(crossProduct(v1, v2).z < 0.0)			//check if next two lines are CCW
-				{
-					//cout << "v1 : " << vectorAngle(mp, ep, fp) << "v2 : " << vectorAngle(mp, ep, np) << endl;
+		    	if(crossProduct(v1, v2).z < 0.0)			//check if next two lines are CCW
+			    {
+				    if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, np))		//check if line is an interior line
+				    {
+					    intersectFlag = true;
+					    //cout << "ANGLE Intersection" << endl << endl;
+				    }
+			    }	
+		    }
 
-					if(vectorAngle(mp, ep, fp) > vectorAngle(mp, ep, np))		//check if line is an interior line
-					{
-						intersectFlag = true;
-						//cout << "ANGLE Intersection" << endl << endl;
-					}
-				}
-			}
+		    //check if the lines intersect
+		    if(!intersectFlag)
+		    {				
+			    //add triangle to triangle list
+                trianglelist.push_back(triangle(fp, mp, ep));
 
-			//check if the lines intersect
-			if(!intersectFlag)
-			{				
-				//add triangle to triangle list
-                		trianglelist.push_back(triangle(fp, mp, ep));
-
-                		//remove the midpoint
-				vertCount--;
+                //remove the midpoint
+		        vertCount--;
 	
-                		//move up all the points that aren't null
-                		for(int i = pi+1; i < vertCount; i++)
-                		{
-                    			//tempList[i] = tempList[i+1];
-					tempList[i].x = tempList[i+1].x;
-					tempList[i].y = tempList[i+1].y;
-					tempList[i].z = tempList[i+1].z;
-					tempList[i].w = tempList[i+1].w;
-                		}
-				//tempList[vertCount] = vertex(0.0, 0.0, 0.0, 0.0);
-				tempList[vertCount].x = 0.0;
-				tempList[vertCount].y = 0.0;
-				tempList[vertCount].z = 0.0;
-				tempList[vertCount].w = 0.0;
+                //move up all the points that aren't null
+                for(int i = pi+1; i < vertCount; i++)
+                {
+				    tempList[i].x = tempList[i+1].x;
+				    tempList[i].y = tempList[i+1].y;
+				    tempList[i].z = tempList[i+1].z;
+				    tempList[i].w = tempList[i+1].w;
+                }
+			    tempList[vertCount].x = 0.0;
+			    tempList[vertCount].y = 0.0;
+			    tempList[vertCount].z = 0.0;
+		    	tempList[vertCount].w = 0.0;
 
-				//return to first 3 points
-				pi = 0;
+			    //return to first 3 points
+			    pi = 0;
 
-				//cout << "***points were VALID***" << endl << endl;
-			}
-			else
-			{
-				//move to the next set of 3 points
-				pi++;
-				//cout << "***points were NOT VALID***" << endl << endl;
-			}
-        	}
-        	else		//check if points are CW
-        	{
-            		//move to the next set of 3 points 
-			pi++;
-			//cout << "***points were CW***" << endl << endl;
-        	}
-		//cout << "****************" << endl << endl;
-	}
+			    //cout << "***points were VALID***" << endl << endl;
+		    }
+		    else
+		    {
+			    //move to the next set of 3 points
+			    pi++;
+			    //cout << "***points were NOT VALID***" << endl << endl;
+		    }
+        }
+        else		//check if points are CW
+        {
+            //move to the next set of 3 points 
+		    pi++;
+		    //cout << "***points were CW***" << endl << endl;
+        }
+    }
 
 	//Add last 3 vertices
 	trianglelist.push_back(triangle(tempList[0], tempList[1], tempList[2]));
@@ -234,7 +191,7 @@ bool isLineOnBounds(vertex p1, vertex p2)
 	}
 }
 
-float vectorAngle(vertex fp, vertex mp, vertex ep)		//***Check if it works***//
+float vectorAngle(vertex fp, vertex mp, vertex ep)
 {
 	//find the angle of two vectors sharing middle point
 	vector3D v1 = vector3D( (fp.x - mp.x), (fp.y - mp.y), 0.0);
@@ -245,7 +202,7 @@ float vectorAngle(vertex fp, vertex mp, vertex ep)		//***Check if it works***//
 	return va;
 }   
 
-bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)		//***Check if it works***//
+bool checkIntersection(vertex p1, vertex p2, vertex p3, vertex p4)
 {
 	float ADet = 0.0;
 	float tADet = 0.0;
